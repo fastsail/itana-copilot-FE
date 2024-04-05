@@ -139,6 +139,7 @@ export default function Footer() {
 								<div className='flex flex-col gap-2'>
 									{footer_data[header as keyof typeof footer_data].map((link: any) => (
 										<Link
+											key={link.href}
 											className={cn(
 												'text-sm font-light flex items-center gap-2',
 												button_styles,
@@ -165,6 +166,7 @@ export default function Footer() {
 					<div className='flex items-center gap-6 min-w-[200px]'>
 						{['Term of user', 'Privacy policy', 'Security'].map((link) => (
 							<Link
+								key={link  }
 								className={cn(
 									'text-sm font-light flex items-center gap-2',
 									button_styles,

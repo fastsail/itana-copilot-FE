@@ -17,15 +17,18 @@ import Logo from '@/assets/images/itana-logo-black.png';
 import Image from 'next/image';
 import { button_styles } from '@/constants/global.const';
 import { CircleX, Menu } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 export function Navbar() {
 	//
 	const [isHidden, setIsHidden] = React.useState<boolean>(true);
+	const pathname = usePathname();
+	const hideNavbar = pathname.includes('/auth') || pathname.includes('/dashboard');
 	//
-	return (
+	return hideNavbar ? null : (
 		<nav className='w-screen md:sticky top-0 bg-white z-50 relative md:bg-transparent'>
 			<div className='max-w-[1440px] hidden md:flex bg-white justify-between items-center px-[4%] h-[80px] mx-auto w-full'>
-				<Link className='font-light text-sm' href='/docs' legacyBehavior passHref>
+				<Link className='font-light text-sm' href='/' legacyBehavior passHref>
 					<Image src={Logo} alt='itana-logo' />
 				</Link>
 				{/*  */}
@@ -55,7 +58,7 @@ export function Navbar() {
 					</NavigationMenuList>
 				</NavigationMenu>
 				{/*  */}
-				<Link href='/docs' legacyBehavior passHref>
+				<Link href='/auth/signup' legacyBehavior passHref>
 					<span
 						className={cn(
 							button_styles,
@@ -66,7 +69,11 @@ export function Navbar() {
 					</span>
 				</Link>
 			</div>
-			{/*  */}
+			{/**
+			|--------------------------------------------------
+			| For mobile view
+			|--------------------------------------------------
+			*/}
 			<div className='px-[4%] py-5 fixed md:hidden flex justify-between items-center w-screen bg-white'>
 				<Link className='font-light text-sm' href='/docs' legacyBehavior passHref>
 					<Image className='w-[70px]' src={Logo} alt='itana-logo' />
@@ -110,7 +117,7 @@ export function Navbar() {
 							{/*  */}
 						</NavigationMenuList>
 					</NavigationMenu>
-					<Link href='/docs' legacyBehavior passHref>
+					<Link href='/auth/signup' legacyBehavior>
 						<span
 							className={cn(
 								button_styles,

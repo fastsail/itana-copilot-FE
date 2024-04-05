@@ -92,7 +92,9 @@ export default function Pricing() {
 								<div className='h-[1px] w-[60%] bg-black/20' />
 
 								{price.offers.map((offer) => (
-									<span className='text-sm text-center font-light text-black/70'>{offer}</span>
+									<span key={offer} className='text-sm text-center font-light text-black/70'>
+										{offer}
+									</span>
 								))}
 							</CardContent>
 						</Card>
