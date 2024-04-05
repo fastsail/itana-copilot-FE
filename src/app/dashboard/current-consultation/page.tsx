@@ -18,6 +18,8 @@ export default function CurrentConsultation() {
 	const viewState = useDashboardStateChange((state) => state.consultationViews);
 	const setViewState = useDashboardStateChange().setConsultationView;
 	//
+	console.log(audioData);
+	//
 	return viewState === 'transcript-view' ? (
 		<TranscriptView />
 	) : viewState === 'default' ? (
@@ -53,9 +55,9 @@ export default function CurrentConsultation() {
 						</button>
 					</div>
 					<div className='flex items-center gap-1'>
-						{visualizerConfiguration(audioData as Uint8Array)?.map((item) => (
+						{visualizerConfiguration(audioData as Uint8Array)?.map((item, index) => (
 							<span
-								key={item.height + item.percentage}
+								key={index}
 								style={{ height: `${item.height}px` }}
 								className='flex items-end w-[4px] bg-slate-200 rounded-md overflow-hidden'
 							>

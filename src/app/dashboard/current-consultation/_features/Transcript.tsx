@@ -1,3 +1,10 @@
+'use client';
+
+import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
+import { button_styles } from '@/constants/global.const';
+import useClickOutside from '@/hooks/useClickOutside';
+import { cn } from '@/lib/utils';
+import { Pause, PauseCircleIcon } from 'lucide-react';
 import React from 'react';
 
 const dummyResponse = [
@@ -30,6 +37,11 @@ const dummyResponse = [
 ];
 
 export default function Transcript() {
+	//
+	const [showPause, setShowPause] = React.useState<boolean>(false);
+	const pauseRef = useClickOutside({ callback: () => setShowPause(false) });
+	const { setActiveView } = useDashboardStateChange();
+	//
 	return (
 		<div className='h-full overflow-y-auto'>
 			<div className='flex flex-col gap-6'>
@@ -43,9 +55,31 @@ export default function Transcript() {
 
 			{/* Finish and generate note */}
 			<div className='flex items-center gap-[1px] bottom-24 fixed right-8'>
+				{/* Pause recording  */}
+				{showPause && (
+					<div ref={pauseRef}>
+						<button
+							onClick={() => setShowPause(false)}
+							type='button'
+							className={cn(
+								button_styles,
+								'absolute text-sm right-0 font-light flex gap-2 items-center justify-center w-max px-6 -top-[110%] bg-[#36A477] h-[48px] rounded-md'
+							)}
+						>
+							<PauseCircleIcon color='white' />{' '}
+							<span className='text-white text-sm'>Pause Consultation</span>
+						</button>
+					</div>
+				)}
+
+				{/*  */}
 				<button
+					onClick={() => setActiveView('Note')}
 					type='button'
-					className='bg-[#36A477] text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8'
+					className={cn(
+						button_styles,
+						'bg-[#36A477] text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8'
+					)}
 				>
 					<svg width='17' height='12' viewBox='0 0 17 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
 						<path
@@ -56,10 +90,14 @@ export default function Transcript() {
 					<span>Finish and generate notes</span>
 				</button>
 				<button
+					onClick={() => setShowPause(!showPause)}
 					type='button'
-					className='bg-[#36A477] text-sm font-light text-white py-3 h-[48px] rounded-r-md flex items-center gap-2 px-8'
+					className={cn(
+						button_styles,
+						'bg-[#36A477] text-sm font-light text-white py-3 h-[48px] rounded-r-md flex items-center gap-2 px-8'
+					)}
 				>
-					<span>
+					<span className={cn('transition-all', showPause ? '-rotate-180' : '')}>
 						<svg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'>
 							<path
 								d='M11.3538 1.35378L6.35378 6.35378C6.30735 6.40027 6.2522 6.43715 6.1915 6.46231C6.13081 6.48748 6.06574 6.50043 6.00003 6.50043C5.93433 6.50043 5.86926 6.48748 5.80856 6.46231C5.74786 6.43715 5.69272 6.40027 5.64628 6.35378L0.646284 1.35378C0.552464 1.25996 0.499756 1.13272 0.499756 1.00003C0.499756 0.867352 0.552464 0.740104 0.646284 0.646284C0.740104 0.552463 0.867352 0.499756 1.00003 0.499756C1.13272 0.499756 1.25996 0.552463 1.35378 0.646284L6.00003 5.29316L10.6463 0.646284C10.6927 0.599829 10.7479 0.562978 10.8086 0.537837C10.8693 0.512696 10.9343 0.499756 11 0.499756C11.0657 0.499756 11.1308 0.512696 11.1915 0.537837C11.2522 0.562978 11.3073 0.599829 11.3538 0.646284C11.4002 0.692739 11.4371 0.747889 11.4622 0.808586C11.4874 0.869282 11.5003 0.934336 11.5003 1.00003C11.5003 1.06573 11.4874 1.13079 11.4622 1.19148C11.4371 1.25218 11.4002 1.30733 11.3538 1.35378Z'

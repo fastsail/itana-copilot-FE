@@ -3,25 +3,49 @@
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function TopNavigation() {
+	/**
+	|--------------------------------------------------
+	| Dashboard functions
+	|--------------------------------------------------
+	*/
 	const {
-		setConsultationView: setViewState,
-		consultationViews: viewState,
 		activeView,
+		settingsView,
+		consultationViews: viewState,
 		setActiveView,
+		setActiveSettingsView,
+		setConsultationView: setViewState,
 	} = useDashboardStateChange();
 
+	/**
+	|--------------------------------------------------
+	| Tab Views
+	|--------------------------------------------------
+	*/
 	const tabViews = ['Transcript', 'Note'];
+	const settingsTabView = ['General', 'Note', 'Account'];
+	/**
+	|--------------------------------------------------
+	| custom hooks
+	|--------------------------------------------------
+	*/
+	const pathname = usePathname();
+	const router = useRouter();
 
 	return (
-		<nav className='top-0 sticky bg-white h-[140px] border-b w-full flex-col justify-between items-center flex p-6 pb-0'>
+		<nav className='top-0 sticky bg-white h-[140px] z-50 border-b w-full flex-col justify-between items-center flex p-6 pb-0'>
 			<div className='w-full flex items-center justify-between'>
 				<h1 className='font-semibold text-3xl'>Consultation</h1>
 
 				<button
-					onClick={() => setViewState('default')}
+					onClick={() => {
+						router.push('/dashboard/current-consultation');
+						setViewState('default');
+					}}
 					type='button'
 					className={cn(
 						button_styles,
@@ -38,7 +62,12 @@ export default function TopNavigation() {
 				</button>
 			</div>
 
-			{viewState === 'default' ? null : (
+			{/**
+			|--------------------------------------------------
+			| Consultation View
+			|--------------------------------------------------
+			*/}
+			{!pathname.includes('/current-consultation') ? null : viewState === 'default' ? null : (
 				<div className='w-full flex gap-8'>
 					{tabViews.map((tab) => (
 						<button
@@ -46,6 +75,27 @@ export default function TopNavigation() {
 							className={cn(
 								'text-sm font-light px-4 pb-1',
 								activeView === tab && 'border-b-2 border-b-[#36A477]'
+							)}
+							key={tab}
+						>
+							{tab}
+						</button>
+					))}
+				</div>
+			)}
+			{/**
+			|--------------------------------------------------
+			| Settings tabview
+			|--------------------------------------------------
+			*/}
+			{!pathname.includes('/settings') ? null : (
+				<div className='w-full flex gap-8'>
+					{settingsTabView.map((tab) => (
+						<button
+							onClick={() => setActiveSettingsView(tab as any)}
+							className={cn(
+								'text-sm font-light px-4 pb-1',
+								settingsView === tab && 'border-b-2 border-b-[#36A477]'
 							)}
 							key={tab}
 						>

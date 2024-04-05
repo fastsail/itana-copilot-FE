@@ -1,5 +1,6 @@
 'use client';
 
+import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import { Clock, Envelope, Installation, Microphone, Settings } from '@/assets/icons';
 import ItanaLogo from '@/assets/images/itana-copilot.png';
 import { cn } from '@/lib/utils';
@@ -7,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import { getCurrentLocalTime } from './currentLocalTime';
 
 /**
 |--------------------------------------------------
@@ -36,11 +38,27 @@ const sidbar_data = [
 	},
 ];
 
+const sidebar_data_aux = [
+	{
+		label: 'Settings',
+		icon: Settings,
+		href: '/dashboard/settings',
+	},
+	{
+		label: 'Contact Us',
+		icon: Envelope,
+		href: '/dashboard/contact',
+	},
+];
+
 //
 export default function Sidebar() {
+	// current local time
+	const time = getCurrentLocalTime();
 	//
 	const pathname = usePathname();
 	const [isActivePage, setIsActivePage] = React.useState<string>(pathname);
+	const { consultationViews } = useDashboardStateChange();
 	//
 	React.useEffect(() => {
 		setIsActivePage(pathname);
@@ -52,22 +70,60 @@ export default function Sidebar() {
 				<Image src={ItanaLogo} alt='itana logo' />
 			</div>
 
-			<div className='px-5 py-6'>
-				{sidbar_data.map((item) => (
-					<Link
-						key={item.href}
-						className={cn(
-							'flex p-3 my-3 text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-center gap-4 font-light',
-							isActivePage === item.href && 'text-[#36A477] bg-[#EEFAEB]'
-						)}
-						href={item.href}
-					>
-						<item.icon color={isActivePage === item.href ? '#36A477' : '#1E3337'} /> {item.label}
-					</Link>
-				))}
-			</div>
+			{/**
+			|--------------------------------------------------
+			| Consultation Card... Shows only when consultation has started
+			|--------------------------------------------------
+			*/}
 
-			<div className='mb-24 mt-auto flex items-center relative justify-center'>
+			{consultationViews === 'transcript-view' && (
+				<div className='px-8 py-5'>
+					<h1 className='font-semibold text-sm'>Today</h1>
+
+					<div
+						className={cn(
+							'flex p-3 my-3 flex-col text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-start font-light text-[#36A477] bg-[#EEFAEB]'
+						)}
+					>
+						<span className='font-medium'>Current Consultation</span>
+						<span className='text-[#558270]'>{time} - 2min</span>
+					</div>
+				</div>
+			)}
+
+			{/**
+			|--------------------------------------------------
+			| Shows only when consultation has not started
+			|--------------------------------------------------
+			*/}
+			{consultationViews === 'default' && (
+				<div className='px-5 py-6'>
+					{sidbar_data.map((item) => (
+						<Link
+							key={item.href}
+							className={cn(
+								'flex p-3 my-3 text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-center gap-4 font-light',
+								isActivePage === item.href && 'text-[#36A477] bg-[#EEFAEB]'
+							)}
+							href={item.href}
+						>
+							<item.icon color={isActivePage === item.href ? '#36A477' : '#1E3337'} /> {item.label}
+						</Link>
+					))}
+				</div>
+			)}
+
+			{/**
+			|--------------------------------------------------
+			| Chrome extension installation
+			|--------------------------------------------------
+			*/}
+			<div
+				className={cn(
+					'mt-auto flex items-center relative justify-center',
+					consultationViews === 'transcript-view' ? 'mb-2' : 'mb-24'
+				)}
+			>
 				<Installation className='absolute -translate-x-1/2 left-1/2 -top-[35px]' />
 				<div className='h-[176px] gap-2 w-[202px] flex flex-col p-4 items-center justify-center rounded-2xl bg-gradient-to-b from-[#F3FEE8] to-[#ECFEF7]'>
 					<h1 className='font-semibold text-sm mt-8'>Try chrome extension</h1>
@@ -78,6 +134,28 @@ export default function Sidebar() {
 					</button>
 				</div>
 			</div>
+
+			{/**
+			|--------------------------------------------------
+			| Shows when consultation has started
+			|--------------------------------------------------
+			*/}
+			{consultationViews === 'transcript-view' && (
+				<div className='px-5 py-6'>
+					{sidebar_data_aux.map((item) => (
+						<Link
+							key={item.href}
+							className={cn(
+								'flex p-3 my-3 text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-center gap-4 font-light',
+								isActivePage === item.href && 'text-[#36A477] bg-[#EEFAEB]'
+							)}
+							href={item.href}
+						>
+							<item.icon color={isActivePage === item.href ? '#36A477' : '#1E3337'} /> {item.label}
+						</Link>
+					))}
+				</div>
+			)}
 		</aside>
 	);
 }
