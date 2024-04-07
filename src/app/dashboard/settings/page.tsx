@@ -7,8 +7,9 @@ import Account from './_features/Account';
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 
 export default function Settings() {
+	//
 	const { settingsView } = useDashboardStateChange();
-
+	//
 	const Views = {
 		General: <General />,
 		Note: <Note />,
