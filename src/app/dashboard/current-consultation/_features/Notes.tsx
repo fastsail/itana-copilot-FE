@@ -1,12 +1,15 @@
 'use client';
-import { GenderIntersex, Magicwand, Menu, Refresh, Settings, Star } from '@/assets/icons';
+import { GenderIntersex, Magicwand, Menu, Microphone, Refresh, Settings, Star } from '@/assets/icons';
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
+import { Copy } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function Notes() {
 	//
 	const [showPause, setShowPause] = React.useState<boolean>(false);
+	const router = useRouter();
 	//
 	return (
 		<div className='h-full overflow-y-auto'>
@@ -20,6 +23,7 @@ export default function Notes() {
 					Note generated with the “Detailed sections” template.
 				</span>
 				<button
+					onClick={() => router.push('/dashboard/settings')}
 					className={cn(
 						button_styles,
 						'bg-[#EEFAEB] flex items-center justify-center gap-2 rounded-md text-sm font-light'
@@ -62,8 +66,16 @@ export default function Notes() {
 			| Free text area
 			|--------------------------------------------------
 			*/}
-			<div>
-				<h1 className='capitalize ml-7 text-sm font-light'>Free text</h1>
+			<div className='flex items-center gap-4 h-8'>
+				<h1 className='capitalize ml-7 text-sm font-medium'>Free text</h1>
+				<div className='flex items-center gap-3 border-l px-6'>
+					<button title='Dictate' className={cn(button_styles, 'h-max p-0')} type='button'>
+						<Microphone />
+					</button>
+					<button title='Copy section' className={cn(button_styles, 'h-max p-0')} type='button'>
+						<Copy size={15} />
+					</button>
+				</div>
 			</div>
 
 			<textarea

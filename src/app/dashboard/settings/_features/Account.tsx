@@ -1,5 +1,76 @@
+import { button_styles } from '@/constants/global.const';
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 export default function Account() {
-	return <div>Account</div>;
+	return (
+		<div className='flex flex-col gap-8'>
+			{/**
+			|--------------------------------------------------
+			| Note Template
+			|--------------------------------------------------
+			*/}
+			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+				<div className='flex flex-col gap-1'>
+					<span className='text-sm font-semibold'>Email address</span>
+				</div>
+				<div className='flex h-10 border rounded-md w-full max-w-[230px] bg-slate-100 px-4'>
+					<span className='font-light text-slate-600 truncate text-sm flex items-center justify-center'>
+						ayodeji.bakare@gmail.com
+					</span>
+				</div>
+				<button type='button' className='flex h-10 items-center border rounded-md w-full max-w-max px-4'>
+					<span className='font-light text-rose-600 text-sm flex items-center justify-center'>Logout</span>
+				</button>
+			</div>
+
+			{/**
+			|--------------------------------------------------
+			| Subscription
+			|--------------------------------------------------
+			*/}
+			<div className='flex justify-between items-start w-full max-w-[500px] border-b pb-6'>
+				<div className='flex flex-col gap-1'>
+					<span className='text-sm font-semibold'>Subscription</span>
+				</div>
+				<div className='w-max'>
+					<div className={cn('h-[52px] w-full rounded-md font-light flex-col text-end  flex text-sm')}>
+						<span className='font-medium'>Free Plan</span>
+						<span className='text-slate-600 text-xs'>Limited to 30 encounters per month</span>
+					</div>
+					<button
+						type='button'
+						className={cn(
+							button_styles,
+							'h-[42px] w-max gap-4 ml-auto rounded-md px-6 font-light text-white bg-black border border-slate-700 flex items-center justify-center text-sm'
+						)}
+					>
+						Upgrade to $119 per month
+					</button>
+				</div>
+			</div>
+
+			{/**
+			|--------------------------------------------------
+			| Personal Informantion
+			|--------------------------------------------------
+			*/}
+			<div className='flex justify-between items-start w-full max-w-[500px] gap-x-8 border-b pb-6'>
+				<div className='flex flex-col gap-1 max-w-[180px]'>
+					<span className='text-sm font-semibold'>Personal information</span>
+					<span className='text-xs font-light'>
+						This information will appear in letters and patient notes
+					</span>
+				</div>
+				<div className='w-full'>
+					<textarea
+						placeholder={`Dr Eric Smith`}
+						className={cn(
+							'min-h-[200px] resize-none w-full ml-auto rounded-md p-4 font-light text-black border border-slate-300 flex items-center justify-center text-sm'
+						)}
+					/>
+				</div>
+			</div>
+		</div>
+	);
 }
