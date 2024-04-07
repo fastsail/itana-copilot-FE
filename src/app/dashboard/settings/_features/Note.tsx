@@ -80,7 +80,7 @@ export default function Note() {
 					placeholder={microphones?.[0]?.label}
 				>
 					{microphones?.map((item, index) => (
-						<SelectItem key={item.deviceId} value={item.deviceId || `Unknown${index}`}>
+						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
 							{item.label.trim()}
 						</SelectItem>
 					))}
