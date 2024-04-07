@@ -79,8 +79,8 @@ export default function Note() {
 					className='h-12 flex justify-between text-start border border-black/20'
 					placeholder={microphones?.[0]?.label}
 				>
-					{microphones?.map((item) => (
-						<SelectItem key={item.deviceId} value={item.deviceId}>
+					{microphones?.map((item, index) => (
+						<SelectItem key={item.deviceId} value={item.deviceId || `Unknown${index}`}>
 							{item.label.trim()}
 						</SelectItem>
 					))}
