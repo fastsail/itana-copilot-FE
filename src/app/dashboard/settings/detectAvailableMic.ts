@@ -8,7 +8,7 @@ export const detectAvailableMicrophones = async () => {
 			label: mic.label || 'Microphone', // Use 'Microphone' if label is not available
 		}));
 	} catch (error) {
-		console.error('Error detecting available microphones:', error);
+		console.error('Error detecting available microphone:', error);
 		return [];
 	}
 };

@@ -37,7 +37,7 @@ export default function General() {
 	React.useEffect(() => {
 		const fetchDeviceName = async () => {
 			const name = await getDeviceName();
-			setDeviceName(name);
+			setDeviceName(name || 'Unknown');
 		};
 
 		fetchDeviceName();
@@ -131,7 +131,7 @@ export default function General() {
 					placeholder='Language'
 				>
 					{microphones?.map((item, index) => (
-						<SelectItem key={item.deviceId} value={item.deviceId || `Unknown${index}`}>
+						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
 							{item.label.trim()}
 						</SelectItem>
 					))}
