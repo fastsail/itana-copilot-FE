@@ -7,7 +7,7 @@ export default function ContactUs() {
 		<div className='p-6'>
 			<h1 className='text-sm font-semibold'>Your Message</h1>
 
-			<div className='w-[80%]'>
+			<div className='md:w-[80%]'>
 				<textarea
 					className='w-full text-sm placeholder:text-sm font-light min-h-[500px] border resize-none rounded-md mt-6 p-6'
 					placeholder='Your enquiry here'

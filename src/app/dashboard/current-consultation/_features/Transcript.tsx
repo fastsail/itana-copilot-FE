@@ -47,14 +47,14 @@ export default function Transcript() {
 			<div className='flex flex-col gap-6'>
 				{dummyResponse.map((res) => (
 					<div key={res.time_stamp}>
-						<span className='text-sm font-light text-slate-500'>{res.time_stamp}</span>
-						<p className='text-sm font-light text-slate-600'>{res.text}</p>
+						<span className='text-xs md:text-sm font-light text-slate-500'>{res.time_stamp}</span>
+						<p className='text-xs md:text-sm font-light text-slate-600'>{res.text}</p>
 					</div>
 				))}
 			</div>
 
 			{/* Finish and generate note */}
-			<div className='flex items-center gap-[1px] bottom-24 fixed right-8'>
+			<div className='flex items-center gap-[1px] bottom-24 fixed right-8 ml-4'>
 				{/* Pause recording  */}
 				{showPause && (
 					<div ref={pauseRef}>
@@ -67,7 +67,7 @@ export default function Transcript() {
 							)}
 						>
 							<PauseCircleIcon color='white' />{' '}
-							<span className='text-white text-sm'>Pause Consultation</span>
+							<span className='text-white text-xs md:text-sm'>Pause Consultation</span>
 						</button>
 					</div>
 				)}
@@ -78,7 +78,7 @@ export default function Transcript() {
 					type='button'
 					className={cn(
 						button_styles,
-						'bg-[#36A477] text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8'
+						'bg-[#36A477] text-xs md:text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8'
 					)}
 				>
 					<svg width='17' height='12' viewBox='0 0 17 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
