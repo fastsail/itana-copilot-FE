@@ -37,7 +37,7 @@ export default function General() {
 	React.useEffect(() => {
 		const fetchDeviceName = async () => {
 			const name = await getDeviceName();
-			setDeviceName(name);
+			setDeviceName(name || 'Unknown');
 		};
 
 		fetchDeviceName();
@@ -50,10 +50,10 @@ export default function General() {
             | Language
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px]'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px]'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Language</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Language</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField className='h-12 border border-black/20' placeholder='Language'>
 					{['English', 'Spanish', 'French'].map((item) => (
@@ -68,10 +68,10 @@ export default function General() {
             | Encounter Language
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px]'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px]'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Encounter Language</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Encounter Language</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField className='h-12 border border-black/20' placeholder='Language'>
 					{['English', 'Spanish', 'French'].map((item) => (
@@ -86,10 +86,12 @@ export default function General() {
             | Show the language selector
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Show the language selector before each encounter</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>
+						Show the language selector before each encounter
+					</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 
 				<div className='flex items-center space-x-2'>
@@ -102,10 +104,10 @@ export default function General() {
             | Punctuation while dictating
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Punctuation while dictating</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Punctuation while dictating</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField className='h-12 border border-black/20' placeholder='Language'>
 					{['English', 'Spanish', 'French'].map((item) => (
@@ -121,17 +123,17 @@ export default function General() {
             | Microphone
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Microphone</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Microphone</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField
 					className='h-12 flex justify-between text-start border border-black/20'
 					placeholder='Language'
 				>
 					{microphones?.map((item, index) => (
-						<SelectItem key={item.deviceId} value={item.deviceId || `Unknown${index}`}>
+						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
 							{item.label.trim()}
 						</SelectItem>
 					))}
@@ -143,12 +145,12 @@ export default function General() {
             | This device name
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center w-full flex-wrap gap-4 max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>This device’s name</span>
+					<span className='text-xs md:text-sm font-semibold'>This device’s name</span>
 				</div>
 				<div className='flex h-12 border rounded-md w-full max-w-[180px] px-4'>
-					<span className='font-light text-sm flex items-center justify-center'>{deviceName}</span>
+					<span className='font-light text-xs md:text-sm flex items-center justify-center'>{deviceName}</span>
 				</div>
 			</div>
 
@@ -157,14 +159,16 @@ export default function General() {
             | Devices to which your notes will automatically be sent
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center w-full flex-wrap gap-4 max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>
+					<span className='text-xs md:text-sm font-semibold'>
 						Devices to which your notes will automatically be sent
 					</span>
 				</div>
 				<div className='flex h-12 border rounded-md w-full max-w-[180px] px-4'>
-					<span className='font-light text-sm flex items-center justify-center'>Not device yet</span>
+					<span className='font-light text-xs md:text-sm flex items-center justify-center'>
+						Not device yet
+					</span>
 				</div>
 			</div>
 
@@ -173,16 +177,16 @@ export default function General() {
             | Receive notes
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Receive notes from other devices</span>
+					<span className='text-xs md:text-sm font-semibold'>Receive notes from other devices</span>
 				</div>
 				<div className='w-max'>
 					<button
 						type='button'
 						className={cn(
 							button_styles,
-							'h-[52px] w-full gap-4 rounded-md px-6 font-light bg-[#36A477] text-white flex items-center justify-center text-sm'
+							'h-[52px] w-full gap-4 rounded-md px-6 font-light bg-[#36A477] text-white flex items-center justify-center text-xs md:text-sm'
 						)}
 					>
 						Receive notes from phone
@@ -191,7 +195,7 @@ export default function General() {
 						type='button'
 						className={cn(
 							button_styles,
-							'h-[52px] w-max gap-4 rounded-md mt-4 px-6 font-light text-black border border-slate-700 flex items-center justify-center text-sm'
+							'h-[52px] w-max gap-4 rounded-md mt-4 px-6 font-light text-black border border-slate-700 flex items-center justify-center text-xs md:text-sm'
 						)}
 					>
 						Receive from another computer
@@ -204,12 +208,12 @@ export default function General() {
             | Show the language selector
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>
+					<span className='text-xs md:text-sm font-semibold'>
 						Allow audio sharing after encounter to improve the transcription
 					</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 
 				<div className='flex items-center space-x-2'>

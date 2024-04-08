@@ -15,6 +15,7 @@ export default function RootLayout({
 	return (
 		<main className='flex w-screen'>
 			<Sidebar />
+
 			<section className='w-full'>
 				<TopNavigation />
 				{children}

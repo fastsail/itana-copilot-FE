@@ -58,14 +58,20 @@ export default function Sidebar() {
 	//
 	const pathname = usePathname();
 	const [isActivePage, setIsActivePage] = React.useState<string>(pathname);
-	const { consultationViews } = useDashboardStateChange();
+	const { consultationViews, setShowSidebar, showSidebar } = useDashboardStateChange();
 	//
 	React.useEffect(() => {
 		setIsActivePage(pathname);
 	}, [pathname]);
 	//
+	//
 	return (
-		<aside className='sticky top-0 min-w-[260px] border-r h-screen flex flex-col justify-between'>
+		<aside
+			className={cn(
+				'md:sticky fixed z-[50] top-0 min-w-[260px] border-r h-screen bg-white transition-transform md:flex flex-col justify-between',
+				showSidebar ? 'translate-x-0' : 'md:translate-x-0 -translate-x-[150vw]'
+			)}
+		>
 			<div className='w-full h-[120px] border-b flex items-center px-8'>
 				<Image src={ItanaLogo} alt='itana logo' />
 			</div>
@@ -77,12 +83,12 @@ export default function Sidebar() {
 			*/}
 
 			{consultationViews === 'transcript-view' && (
-				<div className='px-8 py-5'>
-					<h1 className='font-semibold text-sm'>Today</h1>
+				<div className='px-8 py-5 mt-4 md:mt-0'>
+					<h1 className='font-semibold text-xs md:text-sm'>Today</h1>
 
 					<div
 						className={cn(
-							'flex p-3 my-3 flex-col text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-start font-light text-[#36A477] bg-[#EEFAEB]'
+							'flex p-3 my-3 flex-col text-xs md:text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-start font-light text-[#36A477] bg-[#EEFAEB]'
 						)}
 					>
 						<span className='font-medium'>Current Consultation</span>
@@ -100,6 +106,7 @@ export default function Sidebar() {
 				<div className='px-5 py-6'>
 					{sidbar_data.map((item) => (
 						<Link
+							onClick={() => showSidebar && setShowSidebar(false)}
 							key={item.href}
 							className={cn(
 								'flex p-3 my-3 text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-center gap-4 font-light',
@@ -120,7 +127,7 @@ export default function Sidebar() {
 			*/}
 			<div
 				className={cn(
-					'mt-auto flex items-center relative justify-center',
+					'mt-[70%] md:mt-auto flex items-center relative justify-center',
 					consultationViews === 'transcript-view' ? 'mb-2' : 'mb-24'
 				)}
 			>
@@ -129,7 +136,11 @@ export default function Sidebar() {
 					<h1 className='font-semibold text-sm mt-8'>Try chrome extension</h1>
 					<p className='text-xs font-light'>One line benefits here</p>
 
-					<button className='bg-[#DDF9C1] mt-auto text-xs px-6 py-3 rounded-md' type='button'>
+					<button
+						onClick={() => showSidebar && setShowSidebar(false)}
+						className='bg-[#DDF9C1] mt-auto text-xs px-6 py-3 rounded-md'
+						type='button'
+					>
 						Install Now
 					</button>
 				</div>
@@ -144,6 +155,7 @@ export default function Sidebar() {
 				<div className='px-5 py-6'>
 					{sidebar_data_aux.map((item) => (
 						<Link
+							onClick={() => showSidebar && setShowSidebar(false)}
 							key={item.href}
 							className={cn(
 								'flex p-3 my-3 text-sm rounded-md hover:bg-[#EEFAEB] hover:text-[#36A477] transition-all items-center gap-4 font-light',

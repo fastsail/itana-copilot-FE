@@ -18,12 +18,11 @@ export default function CurrentConsultation() {
 	const viewState = useDashboardStateChange((state) => state.consultationViews);
 	const setViewState = useDashboardStateChange().setConsultationView;
 	//
-	console.log(audioData);
 	//
 	return viewState === 'transcript-view' ? (
 		<TranscriptView />
 	) : viewState === 'default' ? (
-		<div className='flex flex-col items-center mt-12'>
+		<div className='flex flex-col items-center mt-12 px-4'>
 			<Mic />
 			<h1 className='font-semibold text-xl tracking-tight'>Click to start consultation</h1>
 			<p className='text-sm font-light text-center mt-3'>
@@ -32,7 +31,7 @@ export default function CurrentConsultation() {
 			</p>
 
 			<div className='min-h-[180px] rounded-xl border mt-8 p-5'>
-				<div className='flex items-center gap-4'>
+				<div className='flex flex-wrap items-center gap-4'>
 					<span className='text-sm font-light'>Consultation type</span>
 					<SelectField placeholder='Consultation type' className='h-[47px]'>
 						{['In person', 'Phone call'].map((item) => (
@@ -43,11 +42,11 @@ export default function CurrentConsultation() {
 					</SelectField>
 				</div>
 
-				<div className='mt-8 flex h-[52] gap-4 items-start justify-between'>
+				<div className='mt-8 flex h-[52] gap-4 items-start flex-wrap justify-between'>
 					<div className='flex-col flex gap-2'>
 						<span className='text-sm font-light'>Test your microphone</span>
 						<button
-							className='text-sm font-semibold text-[#36A477]'
+							className='text-sm text-start font-semibold text-[#36A477]'
 							type='button'
 							onClick={audioData === null ? setupMicrophone : stopMicrophone}
 						>
