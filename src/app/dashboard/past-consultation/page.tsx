@@ -26,7 +26,7 @@ export default function PastConsultation() {
 					type='button'
 					className={cn(
 						button_styles,
-						'h-[52px] w-full max-w-[360px] gap-4 rounded-md mt-12 px-24 font-light bg-[#36A477] text-white flex items-center justify-center text-sm'
+						'h-[52px] w-full max-w-[360px] gap-4 rounded-md mt-12 px-12 md:px-24 font-light bg-[#36A477] text-white flex items-center justify-center text-sm'
 					)}
 				>
 					<Microphone color='white' /> Start Consultation

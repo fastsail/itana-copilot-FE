@@ -32,10 +32,10 @@ export default function Note() {
             | Note Template
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-24'>
+			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-24'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Note Template</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Note Template</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField className='h-12 border border-black/20' placeholder='Language'>
 					{['English', 'Spanish', 'French'].map((item) => (
@@ -51,10 +51,10 @@ export default function Note() {
             | Punctuation while dictating
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Punctuation while dictating</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Punctuation while dictating</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField className='h-12 border border-black/20' placeholder='Language'>
 					{['English', 'Spanish', 'French'].map((item) => (
@@ -70,10 +70,10 @@ export default function Note() {
             | Microphone
             |--------------------------------------------------
             */}
-			<div className='flex justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Microphone</span>
-					<span className='text-sm font-light text-slate-500'>Interface and note language</span>
+					<span className='text-xs md:text-sm font-semibold'>Microphone</span>
+					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
 				</div>
 				<SelectField
 					className='h-12 flex justify-between text-start border border-black/20'
