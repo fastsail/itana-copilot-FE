@@ -10,7 +10,7 @@ export default function Account() {
 			| Note Template
 			|--------------------------------------------------
 			*/}
-			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[600px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
 					<span className='text-sm font-semibold'>Email address</span>
 				</div>
@@ -29,7 +29,7 @@ export default function Account() {
 			| Subscription
 			|--------------------------------------------------
 			*/}
-			<div className='flex justify-between flex-wrap gap-4 items-start w-full max-w-[500px] border-b pb-6'>
+			<div className='flex justify-between flex-wrap gap-4 items-start w-full max-w-[600px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
 					<span className='text-sm font-semibold'>Subscription</span>
 				</div>
@@ -55,7 +55,7 @@ export default function Account() {
 			| Personal Informantion
 			|--------------------------------------------------
 			*/}
-			<div className='flex justify-between flex-wrap gap-4 items-start w-full max-w-[500px] gap-x-8 border-b pb-6'>
+			<div className='flex justify-between flex-wrap gap-4 items-start w-full max-w-[600px] gap-x-8 border-b pb-6'>
 				<div className='flex flex-col gap-1 max-w-[180px]'>
 					<span className='text-sm font-semibold'>Personal information</span>
 					<span className='text-xs font-light'>

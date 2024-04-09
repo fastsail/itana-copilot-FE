@@ -6,7 +6,7 @@ import React from 'react';
 import { detectAvailableMicrophones } from '../detectAvailableMic';
 
 type Microphone = {
-	deviceId: string;
+	value: string;
 	label: string;
 };
 export default function Note() {
@@ -32,7 +32,7 @@ export default function Note() {
             | Note Template
             |--------------------------------------------------
             */}
-			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-24'>
+			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[600px] border-b pb-24'>
 				<div className='flex flex-col gap-1'>
 					<span className='text-xs md:text-sm font-semibold'>Note Template</span>
 					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
@@ -51,7 +51,7 @@ export default function Note() {
             | Punctuation while dictating
             |--------------------------------------------------
             */}
-			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[600px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
 					<span className='text-xs md:text-sm font-semibold'>Punctuation while dictating</span>
 					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
@@ -70,7 +70,7 @@ export default function Note() {
             | Microphone
             |--------------------------------------------------
             */}
-			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
+			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[600px] border-b pb-6'>
 				<div className='flex flex-col gap-1'>
 					<span className='text-xs md:text-sm font-semibold'>Microphone</span>
 					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
@@ -80,7 +80,7 @@ export default function Note() {
 					placeholder={microphones?.[0]?.label}
 				>
 					{microphones?.map((item, index) => (
-						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
+						<SelectItem key={item?.value} value={item?.value || `Unknown${index}`}>
 							{item.label.trim()}
 						</SelectItem>
 					))}
