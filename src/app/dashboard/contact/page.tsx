@@ -9,7 +9,7 @@ export default function ContactUs() {
 
 			<div className='md:w-[80%]'>
 				<textarea
-					className='w-full text-sm placeholder:text-sm font-light min-h-[500px] border resize-none rounded-md mt-6 p-6'
+					className='w-full text-sm placeholder:text-sm font-light min-h-[600px] border resize-none rounded-md mt-6 p-6'
 					placeholder='Your enquiry here'
 				/>
 				<button

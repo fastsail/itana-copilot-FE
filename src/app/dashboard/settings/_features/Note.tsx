@@ -1,91 +1,73 @@
-'use client';
+/**
+ |--------------------------------------------------
+ | Imports
+ |--------------------------------------------------
+ */
+import React, { useState } from 'react';
+import Setting from '../_components/Setting';
+import { SettingDataProps } from '../type';
 
-import { SelectField } from '@/app/components/SelectField';
-import { SelectItem } from '@/components/ui/select';
-import React from 'react';
-import { detectAvailableMicrophones } from '../detectAvailableMic';
+/**
+ |--------------------------------------------------
+ | Note Component
+ |--------------------------------------------------
+ | Component responsible for rendering the Note section.
+ */
 
-type Microphone = {
-	deviceId: string;
-	label: string;
-};
-export default function Note() {
-	/**
-    |--------------------------------------------------
-    | Getting available microphones
-    |--------------------------------------------------
-    */
-	const [microphones, setMicrophones] = React.useState<Microphone[]>([]);
-
-	React.useEffect(() => {
-		const fetchMicrophones = async () => {
-			const availableMicrophones = await detectAvailableMicrophones();
-			setMicrophones(availableMicrophones);
-		};
-
-		fetchMicrophones();
-	}, []);
-	return (
-		<div className='flex flex-col gap-8'>
-			{/**
-            |--------------------------------------------------
-            | Note Template
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-24'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Note Template</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField className='h-12 border border-black/20' placeholder='Language'>
-					{['English', 'Spanish', 'French'].map((item) => (
-						<SelectItem key={item} value={item}>
-							{item}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Punctuation while dictating
-            |--------------------------------------------------
-            */}
-			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Punctuation while dictating</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField className='h-12 border border-black/20' placeholder='Language'>
-					{['English', 'Spanish', 'French'].map((item) => (
-						<SelectItem key={item} value={item}>
-							{item}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Microphone
-            |--------------------------------------------------
-            */}
-			<div className='flex flex-wrap gap-4 justify-between items-center w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Microphone</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField
-					className='h-12 flex justify-between text-start border border-black/20'
-					placeholder={microphones?.[0]?.label}
-				>
-					{microphones?.map((item, index) => (
-						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
-							{item.label.trim()}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-		</div>
-	);
+interface NoteProps {
+	data: SettingDataProps[];
 }
+
+const Note: React.FC<NoteProps> = ({ data =[] }) => {
+    //-- State to manage settings --//
+    const [settings, setSettings] = useState<SettingDataProps[]>(data);
+
+    // Effect to log settings whenever they change
+    // React.useEffect(() => {
+    //     console.log('Settings:', settings);
+    // }, [settings]);
+
+    /**
+     |--------------------------------------------------
+     | handleSettingChange Function
+     |--------------------------------------------------
+     | Function to handle changes in setting values.
+     |
+     | @param {string} id - ID of the setting to update.
+     | @param {string | boolean} newValue - New value for the setting.
+     */
+    const handleSettingChange = (id: string, newValue: string | boolean) => {
+        setSettings(prevSettings => {
+            return prevSettings.map(setting => {
+                if (setting.id === id) {
+                    // Update setting with new value
+                    return {
+                        ...setting,
+                        props: {
+                            ...setting.props,
+                            defaultValue: newValue,
+                        },
+                    };
+                }
+                return setting;
+            });
+        });
+    };
+    
+    return (
+        <div className='flex flex-col gap-8'>
+            {settings.map(setting => (
+                <Setting
+                    key={setting.id}
+                    type={setting.component}
+                    props={setting.props} // Pass props directly to Setting component
+                    value={setting.props.defaultValue} // Use defaultValue from props
+                    onChange={newValue => handleSettingChange(setting.id, newValue)}
+                />
+            ))}
+        </div>
+    );
+}
+
+
+export default Note;

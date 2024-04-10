@@ -14,7 +14,7 @@ export default function Hero() {
 					<TitleHeader text='An AI Assistant' />
 
 					<h1 className='font-semibold tracking-tight sm:text-6xl text-2xl mt-6'>Focus on the patient</h1>
-					<p className='max-w-[500px] sm:text-left text-center sm:text-base text-sm font-light mt-6 leading-6'>
+					<p className='max-w-[600px] sm:text-left text-center sm:text-base text-sm font-light mt-6 leading-6'>
 						Itana Copilot is the leading ambient AI assistant, reducing practitioner burn-out and improving
 						patient care.
 					</p>

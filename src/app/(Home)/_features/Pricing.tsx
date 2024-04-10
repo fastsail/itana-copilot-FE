@@ -69,7 +69,7 @@ export default function Pricing() {
 						<Card
 							key={price.amount}
 							className={cn(
-								'border-none mx-auto min-h-[500px] min-w-[200px] max-w-[350px] shadow-sm p-6 basis-1/3',
+								'border-none mx-auto min-h-[600px] min-w-[200px] max-w-[350px] shadow-sm p-6 basis-1/3',
 								price.gradient && 'bg-gradient-to-b from-[#F3FEE8] to-[#ECFEF7]'
 							)}
 						>

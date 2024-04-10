@@ -16,7 +16,7 @@ export default function InpersonConsultation() {
 						Inperson or virtual consultation
 					</h1>
 
-					<p className='text-black/60 sm:text-base text-sm font-light max-w-[500px]'>
+					<p className='text-black/60 sm:text-base text-sm font-light max-w-[600px]'>
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
 						labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud{' '}
 					</p>

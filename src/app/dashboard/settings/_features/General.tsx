@@ -1,225 +1,107 @@
-import { SelectField } from '@/app/components/SelectField';
-import { SelectItem } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import React from 'react';
-import { detectAvailableMicrophones } from '../detectAvailableMic';
-import { getDeviceName } from '../getDeviceName';
-import { cn } from '@/lib/utils';
-import { button_styles } from '@/constants/global.const';
+/**
+ |--------------------------------------------------
+ | Imports
+ |--------------------------------------------------
+ */
+import React, { useEffect, useState } from 'react';
+import Setting from '../_components/Setting';
+import { useDeviceName, useMicrophones } from '../_hooks';
+import { ComponentType, SettingId } from '../enum';
+import { SettingDataProps } from '../type';
+import { Spinner } from '../../_components';
 
-type Microphone = {
-	deviceId: string;
-	label: string;
-};
-export default function General() {
-	/**
-    |--------------------------------------------------
-    | Getting available microphones
-    |--------------------------------------------------
-    */
-	const [microphones, setMicrophones] = React.useState<Microphone[]>([]);
+/**
+ |--------------------------------------------------
+ | General Component
+ |--------------------------------------------------
+ | This component renders the general settings section
+ | of the application.
+ */
 
-	React.useEffect(() => {
-		const fetchMicrophones = async () => {
-			const availableMicrophones = await detectAvailableMicrophones();
-			setMicrophones(availableMicrophones);
-		};
-
-		fetchMicrophones();
-	}, []);
-	/**
-    |--------------------------------------------------
-    | Getting the device name
-    |--------------------------------------------------
-    */
-	const [deviceName, setDeviceName] = React.useState('Loading...');
-
-	React.useEffect(() => {
-		const fetchDeviceName = async () => {
-			const name = await getDeviceName();
-			setDeviceName(name || 'Unknown');
-		};
-
-		fetchDeviceName();
-	}, []);
-	//
-	return (
-		<div className='flex flex-col gap-8'>
-			{/**
-            |--------------------------------------------------
-            | Language
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px]'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Language</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField className='h-12 border border-black/20' placeholder='Language'>
-					{['English', 'Spanish', 'French'].map((item) => (
-						<SelectItem key={item} value={item}>
-							{item}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-			{/**
-            |--------------------------------------------------
-            | Encounter Language
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px]'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Encounter Language</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField className='h-12 border border-black/20' placeholder='Language'>
-					{['English', 'Spanish', 'French'].map((item) => (
-						<SelectItem key={item} value={item}>
-							{item}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-			{/**
-            |--------------------------------------------------
-            | Show the language selector
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>
-						Show the language selector before each encounter
-					</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-
-				<div className='flex items-center space-x-2'>
-					<Switch id='airplane-mode' />
-				</div>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Punctuation while dictating
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Punctuation while dictating</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField className='h-12 border border-black/20' placeholder='Language'>
-					{['English', 'Spanish', 'French'].map((item) => (
-						<SelectItem key={item} value={item}>
-							{item}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Microphone
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Microphone</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-				<SelectField
-					className='h-12 flex justify-between text-start border border-black/20'
-					placeholder='Language'
-				>
-					{microphones?.map((item, index) => (
-						<SelectItem key={item?.deviceId} value={item?.deviceId || `Unknown${index}`}>
-							{item.label.trim()}
-						</SelectItem>
-					))}
-				</SelectField>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | This device name
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center w-full flex-wrap gap-4 max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>This device’s name</span>
-				</div>
-				<div className='flex h-12 border rounded-md w-full max-w-[180px] px-4'>
-					<span className='font-light text-xs md:text-sm flex items-center justify-center'>{deviceName}</span>
-				</div>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Devices to which your notes will automatically be sent
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center w-full flex-wrap gap-4 max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>
-						Devices to which your notes will automatically be sent
-					</span>
-				</div>
-				<div className='flex h-12 border rounded-md w-full max-w-[180px] px-4'>
-					<span className='font-light text-xs md:text-sm flex items-center justify-center'>
-						Not device yet
-					</span>
-				</div>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Receive notes
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between items-center flex-wrap gap-4 w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>Receive notes from other devices</span>
-				</div>
-				<div className='w-max'>
-					<button
-						type='button'
-						className={cn(
-							button_styles,
-							'h-[52px] w-full gap-4 rounded-md px-6 font-light bg-[#36A477] text-white flex items-center justify-center text-xs md:text-sm'
-						)}
-					>
-						Receive notes from phone
-					</button>
-					<button
-						type='button'
-						className={cn(
-							button_styles,
-							'h-[52px] w-max gap-4 rounded-md mt-4 px-6 font-light text-black border border-slate-700 flex items-center justify-center text-xs md:text-sm'
-						)}
-					>
-						Receive from another computer
-					</button>
-				</div>
-			</div>
-
-			{/**
-            |--------------------------------------------------
-            | Show the language selector
-            |--------------------------------------------------
-            */}
-			<div className='flex justify-between flex-wrap gap-4 items-center w-full max-w-[500px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-xs md:text-sm font-semibold'>
-						Allow audio sharing after encounter to improve the transcription
-					</span>
-					<span className='text-xs md:text-sm font-light text-slate-500'>Interface and note language</span>
-				</div>
-
-				<div className='flex items-center space-x-2'>
-					<Switch id='airplane-mode' />
-				</div>
-			</div>
-		</div>
-	);
+interface GeneralProps {
+  data: SettingDataProps[];
 }
+
+const General: React.FC<GeneralProps> = ({ data =[] }) => {
+  //-- State to manage settings --//
+  const [settings, setSettings] = useState<SettingDataProps[]>(data);
+
+  // Effect to log settings whenever they change
+  // React.useEffect(() => {
+  //   console.log('Settings:', settings);
+  // }, [settings]);
+
+  /**
+   |--------------------------------------------------
+   | handleSettingChange Function
+   |--------------------------------------------------
+   | Function to handle changes in setting values.
+   |
+   | @param {string} id - ID of the setting to update.
+   | @param {string | boolean} newValue - New value for the setting.
+   */
+  const handleSettingChange = (id: string, newValue: string | boolean) => {
+    setSettings(prevSettings => {
+      return prevSettings.map(setting => {
+        if (setting.id === id) {
+          return {
+            ...setting,
+            props: {
+              ...setting.props,
+              defaultValue: newValue,
+            },
+          };
+        }
+        return setting;
+      });
+    });
+  };
+
+  //-- Fetching Microphones and Device Name --//
+  const {loading: isLoadingMics, microphones} = useMicrophones();
+  const deviceName = useDeviceName();
+
+  if (isLoadingMics) return <Spinner />;
+
+  return (
+    <div className='flex flex-col gap-8'>
+      {settings.map((setting) => {
+        if (setting.id === SettingId.Microphone && microphones.length > 1) {
+          return (
+            <Setting
+              key={setting.id}
+              type={ComponentType.Selector}
+              options={microphones}
+              props={setting.props} 
+              value={setting.props.defaultValue}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
+            />
+          );
+        } else if (setting.id === SettingId.DeviceName) {
+          return (
+            <Setting
+              key={setting.id}
+              type={ComponentType.Default}
+              options={[]}
+              props={setting.props}
+              value={deviceName}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
+            />
+          );
+        } else {
+          return (
+            <Setting
+              key={setting.id}
+              type={setting.component === ComponentType.Toggle ? ComponentType.Toggle : ComponentType.Selector}
+              props={setting.props}
+              value={setting.props.defaultValue}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
+            />
+          );
+        }
+      })}
+    </div>
+  );
+};
+
+export default General;
