@@ -1,6 +1,13 @@
+/**
+ |--------------------------------------------------
+ | Imports
+ |--------------------------------------------------
+ */
+import React, { useState } from 'react';
 import Setting from '../_components/Setting';
-import { generalSettings } from '../_data/getSettings';
+import { generalSettings, SettingDataProps } from '../_data/getSettings';
 import { useDeviceName, useMicrophones } from '../_hooks';
+import { SettingId, ComponentType } from '../enum';
 
 /**
  |--------------------------------------------------
@@ -10,50 +17,77 @@ import { useDeviceName, useMicrophones } from '../_hooks';
  | of the application.
  */
 const General = () => {
-  /**
-   |--------------------------------------------------
-   | Fetching Microphones and Device Name
-   |--------------------------------------------------
-   | Fetches available microphones and device name using hooks.
-   */
-  const microphones = useMicrophones();
-  const deviceName = useDeviceName();
+  //-- State to manage settings --//
+  const [settings, setSettings] = useState<SettingDataProps[]>(generalSettings);
+
+  // Effect to log settings whenever they change
+  React.useEffect(() => {
+    console.log('Settings:', settings);
+  }, [settings]);
 
   /**
    |--------------------------------------------------
-   | Rendering Settings
+   | handleSettingChange Function
    |--------------------------------------------------
-   | Iterates over general settings and renders appropriate
-   | Setting component based on type (Microphone, DeviceName, etc.)
+   | Function to handle changes in setting values.
+   |
+   | @param {string} id - ID of the setting to update.
+   | @param {string | boolean} newValue - New value for the setting.
    */
+  const handleSettingChange = (id: string, newValue: string | boolean) => {
+    setSettings(prevSettings => {
+      return prevSettings.map(setting => {
+        if (setting.id === id) {
+          return {
+            ...setting,
+            props: {
+              ...setting.props,
+              defaultValue: newValue,
+            },
+          };
+        }
+        return setting;
+      });
+    });
+  };
+
+  //-- Fetching Microphones and Device Name --//
+  const microphones = useMicrophones();
+  const deviceName = useDeviceName();
+
   return (
     <div className='flex flex-col gap-8'>
-      {generalSettings.map(({ id, component, props }) => {
-        if (id === 'Microphone') {
+      {settings.map((setting) => {
+        if (setting.id === SettingId.Microphone) {
           return (
             <Setting
-              key={id}
-              type="Selector"
-              {...props}
+              key={setting.id}
+              type={ComponentType.Selector}
               options={microphones}
+              props={setting.props} 
+              value={setting.props.defaultValue}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
             />
           );
-        } else if (id === 'DeviceName') {
+        } else if (setting.id === SettingId.DeviceName) {
           return (
             <Setting
-              key={id}
-              type="Default"
-              {...props}
+              key={setting.id}
+              type={ComponentType.Default}
               options={[]}
-              defaultValue={deviceName}
+              props={setting.props}
+              value={deviceName}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
             />
           );
         } else {
           return (
             <Setting
-              key={id}
-              type={component === 'Toggle' ? 'Toggle' : 'Selector'}
-              {...props}
+              key={setting.id}
+              type={setting.component === ComponentType.Toggle ? ComponentType.Toggle : ComponentType.Selector}
+              props={setting.props}
+              value={setting.props.defaultValue}
+              onChange={newValue => handleSettingChange(setting.id, newValue)}
             />
           );
         }
