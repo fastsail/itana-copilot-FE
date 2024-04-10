@@ -146,11 +146,11 @@ const DefaultSetting: React.FC<DefaultSettingsProp> = ({ label, defaultValue }) 
  |--------------------------------------------------
  | Renders a setting based on the provided type (Toggle, Selector, or Default).
  */
- const Setting: React.FC<SettingsProp<any>> = ({ type, props, value, options, onChange}) => {
+const Setting: React.FC<SettingsProp<any>> = ({ type, props, value, onChange, options }) => {
     if (type === 'Toggle') {
         return <ToggleSetting {...props as ToggleSettingsProp} onChange={onChange} defaultValue={value} />;
-    } else if (type === 'Selector' && props && props.options) {
-        return <SelectorSetting {...props as SelectorSettingsProp} onChange={onChange} defaultValue={value} options={options || []} />;
+    } else if (type === 'Selector') {
+        return <SelectorSetting {...props as SelectorSettingsProp} onChange={onChange} defaultValue={value} />;
     } else if (type === 'Default') {
         return <DefaultSetting {...props as DefaultSettingsProp} defaultValue={value} />;
     }

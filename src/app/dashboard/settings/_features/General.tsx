@@ -65,19 +65,18 @@ const General: React.FC<GeneralProps> = ({ data =[] }) => {
 
   return (
     <div className='flex flex-col gap-8'>
-      {settings.map((setting) => {
-        if (setting.id === SettingId.Microphone && microphones.length > 1) {
-          return (
-            <Setting
-              key={setting.id}
-              type={ComponentType.Selector}
-              options={microphones}
-              props={setting.props} 
-              value={setting.props.defaultValue}
-              onChange={newValue => handleSettingChange(setting.id, newValue)}
-            />
-          );
-        } else if (setting.id === SettingId.DeviceName) {
+     {settings.map((setting) => {
+       if (setting.id === SettingId.Microphone && microphones.length > 1) {
+         return (
+           <Setting
+             key={setting.id}
+             type={ComponentType.Selector}
+             props={{...setting.props, options: microphones }}
+             value={setting.props.defaultValue}
+             onChange={newValue => handleSettingChange(setting.id, newValue)}
+           />
+         );
+       } else if (setting.id === SettingId.DeviceName) {
           return (
             <Setting
               key={setting.id}
