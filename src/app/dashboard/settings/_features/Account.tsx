@@ -1,3 +1,8 @@
+/**
+ |--------------------------------------------------
+ | Imports
+ |--------------------------------------------------
+ */
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
 import React from 'react';

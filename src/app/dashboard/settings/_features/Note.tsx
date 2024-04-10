@@ -1,6 +1,11 @@
+/**
+ |--------------------------------------------------
+ | Imports
+ |--------------------------------------------------
+ */
 import React, { useState } from 'react';
-import { notesSettings, SettingDataProps } from '../_data/getSettings';
 import Setting from '../_components/Setting';
+import { SettingDataProps } from '../type';
 
 /**
  |--------------------------------------------------
@@ -8,14 +13,19 @@ import Setting from '../_components/Setting';
  |--------------------------------------------------
  | Component responsible for rendering the Note section.
  */
-export default function Note() {
+
+interface NoteProps {
+	data: SettingDataProps[];
+}
+
+const Note: React.FC<NoteProps> = ({ data =[] }) => {
     //-- State to manage settings --//
-    const [settings, setSettings] = useState<SettingDataProps[]>(notesSettings);
+    const [settings, setSettings] = useState<SettingDataProps[]>(data);
 
     // Effect to log settings whenever they change
-    React.useEffect(() => {
-        console.log('Settings:', settings);
-    }, [settings]);
+    // React.useEffect(() => {
+    //     console.log('Settings:', settings);
+    // }, [settings]);
 
     /**
      |--------------------------------------------------
@@ -58,3 +68,6 @@ export default function Note() {
         </div>
     );
 }
+
+
+export default Note;

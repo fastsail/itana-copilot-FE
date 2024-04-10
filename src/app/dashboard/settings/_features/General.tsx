@@ -3,11 +3,12 @@
  | Imports
  |--------------------------------------------------
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Setting from '../_components/Setting';
-import { generalSettings, SettingDataProps } from '../_data/getSettings';
 import { useDeviceName, useMicrophones } from '../_hooks';
-import { SettingId, ComponentType } from '../enum';
+import { ComponentType, SettingId } from '../enum';
+import { SettingDataProps } from '../type';
+import { Spinner } from '../../_components';
 
 /**
  |--------------------------------------------------
@@ -16,14 +17,19 @@ import { SettingId, ComponentType } from '../enum';
  | This component renders the general settings section
  | of the application.
  */
-const General = () => {
+
+interface GeneralProps {
+  data: SettingDataProps[];
+}
+
+const General: React.FC<GeneralProps> = ({ data =[] }) => {
   //-- State to manage settings --//
-  const [settings, setSettings] = useState<SettingDataProps[]>(generalSettings);
+  const [settings, setSettings] = useState<SettingDataProps[]>(data);
 
   // Effect to log settings whenever they change
-  React.useEffect(() => {
-    console.log('Settings:', settings);
-  }, [settings]);
+  // React.useEffect(() => {
+  //   console.log('Settings:', settings);
+  // }, [settings]);
 
   /**
    |--------------------------------------------------
@@ -52,13 +58,15 @@ const General = () => {
   };
 
   //-- Fetching Microphones and Device Name --//
-  const microphones = useMicrophones();
+  const {loading: isLoadingMics, microphones} = useMicrophones();
   const deviceName = useDeviceName();
+
+  if (isLoadingMics) return <Spinner />;
 
   return (
     <div className='flex flex-col gap-8'>
       {settings.map((setting) => {
-        if (setting.id === SettingId.Microphone) {
+        if (setting.id === SettingId.Microphone && microphones.length > 1) {
           return (
             <Setting
               key={setting.id}

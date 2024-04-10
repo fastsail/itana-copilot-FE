@@ -12,7 +12,8 @@ import React from 'react';
  |--------------------------------------------------
  | Define ToggleSetting Props Interface
  |--------------------------------------------------
- | Defines the properties expected by the ToggleSetting component.
+ | Defines the properties expected by the 
+ |ToggleSetting component.
  */
  type ToggleSettingsProp = {
     defaultValue: boolean;
@@ -145,11 +146,11 @@ const DefaultSetting: React.FC<DefaultSettingsProp> = ({ label, defaultValue }) 
  |--------------------------------------------------
  | Renders a setting based on the provided type (Toggle, Selector, or Default).
  */
- const Setting: React.FC<SettingsProp<any>> = ({ type, props, value, onChange}) => {
+ const Setting: React.FC<SettingsProp<any>> = ({ type, props, value, options, onChange}) => {
     if (type === 'Toggle') {
         return <ToggleSetting {...props as ToggleSettingsProp} onChange={onChange} defaultValue={value} />;
     } else if (type === 'Selector' && props && props.options) {
-        return <SelectorSetting {...props as SelectorSettingsProp} onChange={onChange} defaultValue={value} />;
+        return <SelectorSetting {...props as SelectorSettingsProp} onChange={onChange} defaultValue={value} options={options || []} />;
     } else if (type === 'Default') {
         return <DefaultSetting {...props as DefaultSettingsProp} defaultValue={value} />;
     }

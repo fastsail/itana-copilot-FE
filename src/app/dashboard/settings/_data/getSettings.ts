@@ -1,19 +1,4 @@
-interface SettingOption {
-    label: string;
-    value: string;
-    description?: string;
-}
-
-export interface SettingDataProps {
-    id: string;
-    component: 'Selector' | 'Toggle' | 'Default';
-    props: {
-        label: string;
-        description: string;
-        defaultValue: string | boolean;
-        options?: SettingOption[];
-    };
-}
+import { SettingDataProps } from "../type";
 
 export const generalSettings: SettingDataProps[] = [
     {

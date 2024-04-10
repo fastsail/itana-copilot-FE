@@ -5,16 +5,29 @@ import General from './_features/General';
 import Note from './_features/Note';
 import Account from './_features/Account';
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
+import useAuthenticated from './_hooks/useAuthenticated';
+import { Spinner } from '../_components';
 
 export default function Settings() {
 	//
+	const {data, loading} = useAuthenticated();
 	const { settingsView } = useDashboardStateChange();
+	
 	//
 	const Views = {
-		General: <General />,
-		Note: <Note />,
+		General: <General data={data?.data.general_settings || []} />,
+		Note: <Note data={data?.data.notes_settings || []}/>,
 		Account: <Account />,
 	};
 
-	return <div className='p-6'>{Views[settingsView]}</div>;
+	if(loading){ 
+		return <Spinner />
+	};
+
+	return (
+		<div className='p-6 flex flex-col justify-between min-h-[80%]'>	
+			{Views[settingsView]}
+			<p className='text-xs text-slate-400 font-thin mt-10'>Version {data?.data.version}</p>
+		</div>
+	);
 }
