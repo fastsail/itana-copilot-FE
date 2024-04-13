@@ -68,7 +68,7 @@ export default function Sidebar() {
 	return (
 		<aside
 			className={cn(
-				'md:sticky fixed z-[50] top-0 min-w-[260px] border-r h-screen bg-white transition-transform md:flex flex-col justify-between',
+				'md:sticky fixed z-[50] top-0 min-w-[260px] border-r h-screen bg-white transition-transform md:flex flex-col justify-start',
 				showSidebar ? 'translate-x-0' : 'md:translate-x-0 -translate-x-[150vw]'
 			)}
 		>
@@ -125,7 +125,7 @@ export default function Sidebar() {
 			| Chrome extension installation
 			|--------------------------------------------------
 			*/}
-			<div
+			{/* <div
 				className={cn(
 					'mt-[70%] md:mt-auto flex items-center relative justify-center',
 					consultationViews === 'transcript-view' ? 'mb-2' : 'mb-24'
@@ -144,7 +144,7 @@ export default function Sidebar() {
 						Install Now
 					</button>
 				</div>
-			</div>
+			</div> */}
 
 			{/**
 			|--------------------------------------------------

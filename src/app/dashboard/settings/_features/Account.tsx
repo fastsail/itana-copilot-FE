@@ -7,7 +7,12 @@ import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
-export default function Account() {
+interface AccountProps {
+	email: string;
+	logout: () => void;
+};
+
+export default function Account({email, logout}: AccountProps) {
 	return (
 		<div className='flex flex-col gap-8'>
 			{/**
@@ -19,14 +24,16 @@ export default function Account() {
 				<div className='flex flex-col gap-1'>
 					<span className='text-sm font-semibold'>Email address</span>
 				</div>
-				<div className='flex h-10 border rounded-md w-full max-w-[230px] bg-slate-100 px-4'>
-					<span className='font-light text-slate-600 truncate text-sm flex items-center justify-center'>
-						ayodeji.bakare@gmail.com
-					</span>
+				<div className='w-[70%] flex flex-row justify-end'>
+					<div className='flex h-10 border rounded-md w-full  bg-slate-100 px-4 sm:mx-2 mr-2'>
+						<span className='font-light text-slate-600 truncate text-sm flex items-center justify-center'>
+							{email ? email : 'No Email Found'}
+						</span>
+					</div>
+					<button type='button' onClick={logout} className='hover:scale-95 transition-transform  flex h-10 items-center border rounded-md w-full max-w-max px-4'>
+						<span className='font-light text-rose-600 text-sm flex items-center justify-center'>Logout</span>
+					</button>
 				</div>
-				<button type='button' className='flex h-10 items-center border rounded-md w-full max-w-max px-4'>
-					<span className='font-light text-rose-600 text-sm flex items-center justify-center'>Logout</span>
-				</button>
 			</div>
 
 			{/**
