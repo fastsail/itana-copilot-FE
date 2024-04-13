@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import General from './_features/General';
 import Note from './_features/Note';
@@ -7,17 +6,25 @@ import Account from './_features/Account';
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import useAuthenticated from './_hooks/useAuthenticated';
 import { Spinner } from '../_components';
+import { useAuth } from '@/app/auth/useAuth';
+import { User } from "@workos-inc/node";
 
 export default function Settings() {
 	//
 	const {data, loading} = useAuthenticated();
 	const { settingsView } = useDashboardStateChange();
-	
+	const { userObject, logout } = useAuth();
+	let user: User | null = null;
+
+	if (userObject && userObject.isAuthenticated) {
+		user = userObject.user;
+	}
+
 	//
 	const Views = {
 		General: <General data={data?.data.general_settings || []} />,
 		Note: <Note data={data?.data.notes_settings || []}/>,
-		Account: <Account />,
+		Account: <Account email={user?.email || ""} logout={logout} />,
 	};
 
 	if(loading){ 

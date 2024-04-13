@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
+import { getUser } from './auth/auth';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -13,11 +14,14 @@ export const metadata: Metadata = {
 	description: 'This is a copilot application',
 };
 
-export default function RootLayout({
+export default async function  RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const { isAuthenticated, user } = await getUser();
+	console.log("User is authenticated ? ", isAuthenticated);
+	
 	return (
 		<html lang='en'>
 			<body className={poppins.className}>
