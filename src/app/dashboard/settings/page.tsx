@@ -8,11 +8,12 @@ import useAuthenticated from './_hooks/useAuthenticated';
 import { Spinner } from '../_components';
 import { useAuth } from '@/app/auth/useAuth';
 import { User } from "@workos-inc/node";
+import { LimitExceeded } from './_components/LimitExceeded';
 
 export default function Settings() {
 	//
 	const {data, loading} = useAuthenticated();
-	const { settingsView } = useDashboardStateChange();
+	const { settingsView, consultationLimitExceeded } = useDashboardStateChange();
 	const { userObject, logout } = useAuth();
 	let user: User | null = null;
 
@@ -32,9 +33,12 @@ export default function Settings() {
 	};
 
 	return (
-		<div className='p-6 flex flex-col justify-between min-h-[80%]'>	
-			{Views[settingsView]}
-			<p className='text-xs text-slate-400 font-thin mt-10'>Version {data?.data.version}</p>
+		<div className='flex flex-col min-h-[80%]'>	
+			{consultationLimitExceeded && <LimitExceeded /> }
+			<div className='p-6 justify-between '>
+				{Views[settingsView]}
+				<p className='text-xs text-slate-400 font-thin mt-10'>Version {data?.data.version}</p>
+			</div>
 		</div>
 	);
 }

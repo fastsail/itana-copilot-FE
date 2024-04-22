@@ -1,6 +1,7 @@
 import { SignJWT } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 import { getJwtSecretKey, workos, getClientId } from "../auth/auth";
+import { handleUser } from "@/lib/handleUser";
 
 /**
 |--------------------------------------------------
@@ -18,8 +19,6 @@ export async function GET(request: NextRequest) {
         clientId: getClientId(),
         code,
       });
-
-      //-- we can retrieve user info from db here --//
 
       //-- create JWT token with the user's information --//
       const token = await new SignJWT({user})

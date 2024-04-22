@@ -1,9 +1,7 @@
+import { verifyJwtToken } from "@/app/auth/auth";
+import { User } from "@workos-inc/node";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import WorkOS, { User } from "@workos-inc/node";
-import { verifyJwtToken } from "@/app/auth/auth";
-
-export const workos = new WorkOS(process.env.WORKOS_API_KEY);
 
 export async function GET() {
   try {

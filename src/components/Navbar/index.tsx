@@ -21,10 +21,6 @@ import { usePathname } from 'next/navigation';
 export function Navbar() {
 	const pathname = usePathname(); // Get current pathname
 	const isDashboardRoute = pathname.startsWith('/dashboard/');
-
-	React.useEffect(() => {
-		console.log('is dashboard route : ', isDashboardRoute);
-	}, [isDashboardRoute])
 	//
 	if(!isDashboardRoute){
 		return (

@@ -1,0 +1,15 @@
+import Stripe from "stripe";
+import { NextResponse } from "next/server";
+
+export async function GET(){ 
+    try {
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+        const prices = await stripe.prices.list({
+            limit: 3,
+        });
+    
+        return NextResponse.json(prices.data.reverse());
+      } catch (error) {
+        console.error('Error fetching prices:', error);
+      }
+};

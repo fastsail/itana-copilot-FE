@@ -1,11 +1,13 @@
 'use client';
 
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
+import { useUserStore } from '@/app/zustand/useUserState';
 import { button_styles } from '@/constants/global.const';
 import useClickOutside from '@/hooks/useClickOutside';
 import { cn } from '@/lib/utils';
 import { Pause, PauseCircleIcon } from 'lucide-react';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const dummyResponse = [
 	{ time_stamp: '00:03', text: 'mollit pariatur irure anim incididunt reprehenderit magna proident' },
@@ -38,9 +40,31 @@ const dummyResponse = [
 
 export default function Transcript() {
 	//
+	const router = useRouter();
 	const [showPause, setShowPause] = React.useState<boolean>(false);
 	const pauseRef = useClickOutside({ callback: () => setShowPause(false) });
-	const { setActiveView } = useDashboardStateChange();
+	const { setActiveView, setActiveSettingsView, setConsultationLimitExceeded } = useDashboardStateChange();
+	const {user} = useUserStore();
+	//
+	const handleGenerateNotes = async () => {
+		const userId = user?.uid;
+
+		if (userId) {
+			//-- Increment consultation count here --//
+			const response = await fetch(`/api/increment_consultation?userId=${userId}`);
+			const data = await response.json();
+			console.log('Data : ', data);
+			const limitedExceeded = data.data.limitExceeded
+			console.log("Limit exceeded: ", limitedExceeded)
+			if (limitedExceeded) {
+				setConsultationLimitExceeded(true);
+				setActiveSettingsView('Account');
+				router.push('/dashboard/settings');
+			} else {
+				setActiveView('Note')
+			}
+		}
+	}
 	//
 	return (
 		<div className='h-full overflow-y-auto'>
@@ -74,7 +98,7 @@ export default function Transcript() {
 
 				{/*  */}
 				<button
-					onClick={() => setActiveView('Note')}
+					onClick={handleGenerateNotes}
 					type='button'
 					className={cn(
 						button_styles,
