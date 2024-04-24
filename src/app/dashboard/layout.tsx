@@ -44,23 +44,7 @@ export default function RootLayout({
 		};
 	
 		fetchData();
-	}, [userObject?.user, handleUser]);
-
-	useEffect(() => {
-		/**
-		 * Caues unnecessary rerender
-		 */
-		// if (consultations) {
-		// 	console.log('Consultations: ', consultations)
-		// 	const limitedExceeded = isConsultationLimitExceeded(consultations, consulation_limit);
-		// 	if (limitedExceeded) {
-		// 		setConsultationLimitExceeded(true);
-		// 		setActiveSettingsView('Account');
-		// 		router.push('/dashboard/settings')
-		// 	}
-		// }
-		// console.log('DB User ', user);
-	}, [])
+	}, [userObject?.user, setUser]);
 	
 	if(loading || loadingUserFromDB){
 		return<Spinner />
