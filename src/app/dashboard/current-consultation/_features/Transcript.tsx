@@ -41,7 +41,7 @@ const Transcript = () => {
                 recognition.stop();
             }
         };
-    }, []);
+    }, [recognition]);
 
     const getCurrentTime = () => {
         const now = new Date();
