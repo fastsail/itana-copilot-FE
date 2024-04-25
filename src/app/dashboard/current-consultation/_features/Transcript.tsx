@@ -23,7 +23,7 @@ const Transcript = () => {
 
     useEffect(() => {
         startRecording(); // Start recording when component mounts
-        const socket = new WebSocket('ws://https://whisper-app-sbmzuuqa7a-uc.a.run.app');
+        const socket = new WebSocket('wss://https://whisper-app-sbmzuuqa7a-uc.a.run.app');
 
         socket.onopen = () => {
             //console.log("WebSocket connected");
