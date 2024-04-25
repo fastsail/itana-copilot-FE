@@ -8,6 +8,7 @@ import Image from 'next/image';
 import DocumentImageOne from '@/assets/images/document_one.png';
 import DocumentImageTwo from '@/assets/images/document_two.png';
 import Vector from '@/assets/images/vector.png';
+import { SignInButton } from '@/app/auth/_components/SignInButton';
 
 export default function Documents() {
 	return (
@@ -32,11 +33,9 @@ export default function Documents() {
 							<ListWrapper spacing='mt-4' color='white' text='Referral Letter' />
 							<ListWrapper spacing='mt-4' color='white' text='Export as PDF' />
 
-							<Link href='/docs' legacyBehavior passHref>
-								<span className='font-light max-w-[259px] mt-12 bg-[#36A477] h-[50px] px-12 text-white flex items-center justify-center text-sm'>
-									Try it for free
-								</span>
-							</Link>
+							<div className='grid sm:grid-cols-2 grid-cols-1 mt-5'>
+								<SignInButton title='Try it for free' />
+							</div>
 						</div>
 					</div>
 				</div>

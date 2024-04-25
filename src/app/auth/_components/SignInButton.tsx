@@ -5,25 +5,29 @@ import Link from 'next/link';
 import { useAuth } from '../useAuth';
 import React from 'react';
 
-export function SignInButton() {
-	const {authUrl, loading } = useAuth();
+interface SignInProps{
+	title?: string
+}
+export function SignInButton({title ="Sign In"}: SignInProps) {
+	const {authUrl, loading, userObject } = useAuth();
 
-	React.useEffect(() => {
-		console.log('Auth url : ', authUrl);
-	}, [authUrl])
+	// React.useEffect(() => {
+	// 	console.log('Auth url : ', authUrl);
+	// 	console.log('User Object : ', userObject?.isAuthenticated);
+	// }, [authUrl, userObject?.isAuthenticated])
 
-	if (false) {
+	if (userObject?.isAuthenticated) {
 		return (
-			<button type='button'>
+			<Link href={"/dashboard/current-consultation"} legacyBehavior passHref>
 				<span
 					className={cn(
 						button_styles,
 						'font-light bg-[#36A477] h-[40px] px-12 text-white flex items-center justify-center text-sm'
 					)}
 				>
-					Sign Out
+					{title}
 				</span>
-			</button>
+			</Link>
 		);
 	}
 
@@ -36,7 +40,7 @@ export function SignInButton() {
 						'font-light bg-[#36A477] h-[40px] px-12 text-white flex items-center justify-center text-sm'
 					)}
 				>
-					Sign Up Now
+					{title}
 				</span>
 			</Link>
 		);
