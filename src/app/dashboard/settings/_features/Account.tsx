@@ -6,6 +6,7 @@
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { Subscription } from './Subscription';
 
 interface AccountProps {
 	email: string;
@@ -41,26 +42,7 @@ export default function Account({email, logout}: AccountProps) {
 			| Subscription
 			|--------------------------------------------------
 			*/}
-			<div className='flex justify-between flex-wrap gap-4 items-start w-full max-w-[600px] border-b pb-6'>
-				<div className='flex flex-col gap-1'>
-					<span className='text-sm font-semibold'>Subscription</span>
-				</div>
-				<div className='w-max'>
-					<div className={cn('h-[52px] w-full rounded-md font-light flex-col text-end  flex text-sm')}>
-						<span className='font-medium'>Free Plan</span>
-						<span className='text-slate-600 text-xs'>Limited to 30 encounters per month</span>
-					</div>
-					<button
-						type='button'
-						className={cn(
-							button_styles,
-							'h-[42px] w-max gap-4 ml-auto rounded-md px-6 font-light text-white bg-black border border-slate-700 flex items-center justify-center text-sm'
-						)}
-					>
-						Upgrade to $119 per month
-					</button>
-				</div>
-			</div>
+			<Subscription />
 
 			{/**
 			|--------------------------------------------------

@@ -1,9 +1,7 @@
 
 import { NextResponse } from "next/server";
-import WorkOS, { User } from "@workos-inc/node";
-import { getClientId } from "@/app/auth/auth";
-
-export const workos = new WorkOS(process.env.WORKOS_API_KEY);
+import WorkOS from "@workos-inc/node";
+import { getClientId, workos } from "@/app/auth/auth";
 
 export async function GET() {
   try {
@@ -23,5 +21,6 @@ export async function GET() {
     return NextResponse.json(authorizationUrl); 
   } catch (error) {
     console.error('Error fetching authorization URL:', error);
+    return NextResponse.json('Error fetching authorization URL:', error); 
   }
 }

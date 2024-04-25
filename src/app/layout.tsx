@@ -1,8 +1,7 @@
+import { Navbar } from '@/components/Navbar';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
-import { Navbar } from '@/components/Navbar';
-import { getUser } from './auth/auth';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -19,8 +18,6 @@ export default async function  RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const { isAuthenticated, user } = await getUser();
-	console.log("User is authenticated ? ", isAuthenticated);
 	
 	return (
 		<html lang='en'>

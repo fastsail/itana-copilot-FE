@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import { User } from '@workos-inc/node';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-type AuthResponse = { isAuthenticated: boolean; user: User | null } | { isAuthenticated: false };
+type AuthResponse = { isAuthenticated: boolean; user: User | null } | { isAuthenticated: false; user?: User };
 
 export function useAuth() {
 	const router = useRouter();
@@ -16,9 +16,14 @@ export function useAuth() {
 			const response = await fetch(url);
 			if (!response.ok) {
 				throw new Error(`Failed to fetch data from ${url}`);
-			}
+			};
 			const responseData = await response.json();
-			setDataCallback(responseData);
+			if (responseData && responseData.user) {
+				// const userFromDB = await handleUser(responseData.user);
+				// responseData.user = userFromDB.data;
+				//console.log('User : ', responseData);
+				setDataCallback(responseData);
+			}
 		} catch (error) {
 			console.error(`Error fetching data from ${url}:`, error);
 		} finally {
@@ -26,8 +31,24 @@ export function useAuth() {
 		}
 	};
 
-    useEffect(() => {
-		fetchData('/api/auth_url', setAuthUrl);
+	useEffect(() => {
+		const fetchAuthUrl = async () => {
+			try {
+				setLoading(true);
+				const response = await fetch('/api/auth_url');
+				if (!response.ok) {
+					throw new Error(`Failed to fetch data from /api/auth_url: ${response.statusText}`);
+				}
+				const responseData = await response.json();
+				setAuthUrl(responseData);
+			} catch (error) {
+				console.error('Error fetching auth URL:', error);
+			} finally {
+				setLoading(false);
+			}
+		};
+	
+		fetchAuthUrl();
 	}, []);
 
 	useEffect(() => {

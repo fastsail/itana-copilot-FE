@@ -5,6 +5,7 @@ import TitleHeader from '../_components/TitleHeader';
 import Link from 'next/link';
 import InpersonImage from '@/assets/images/inperson.png';
 import Image from 'next/image';
+import { SignInButton } from '@/app/auth/_components/SignInButton';
 
 export default function InpersonConsultation() {
 	return (
@@ -21,11 +22,9 @@ export default function InpersonConsultation() {
 						labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud{' '}
 					</p>
 
-					<Link href='/docs' legacyBehavior passHref>
-						<span className='font-light max-w-[259px] mt-12 bg-[#36A477] h-[50px] px-12 text-white flex items-center justify-center text-sm'>
-							Try it for free
-						</span>
-					</Link>
+					<div className='grid sm:grid-cols-2 grid-cols-1 mt-5'>
+						<SignInButton title='Try it for free' />
+					</div>
 				</div>
 				<div className='flex flex-1 flex-col sm:mt-0 mt-8'>
 					<Image src={InpersonImage} alt='in person consultation' />
