@@ -6,7 +6,7 @@ async function storeProductId(productId: string): Promise<void> {
 		throw new Error('Missing product ID to store');
 	}
 
-	// Store the product ID directly in local storage
+	//-- Store the product ID directly in local storage --//
 	localStorage.setItem('pid', productId);
 }
 
