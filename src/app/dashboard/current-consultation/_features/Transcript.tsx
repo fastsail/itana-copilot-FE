@@ -189,7 +189,7 @@ const Transcript = () => {
 
         try {
             // Use the provided template
-            const response = await axios.get(`/api/llama_api?user_message=${template}&max_tokens=${maxTokens}`);
+            const response = await axios.get(`https://llama-api-image-sbmzuuqa7a-uc.a.run.app/llama?user_message=${template}&max_tokens=${maxTokens}`);
             console.log('data:', response.data);
             const processedData = processChunks(response.data);
             setCompletedNoteGenerations(processedData);
