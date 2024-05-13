@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Mic from './_components/Mic';
+import { createBasicEncounter } from '../../(Home)/_utils/encounterUtils';
 import { SelectField } from '@/app/components/SelectField';
 import { SelectItem } from '@/components/ui/select';
 import useMicrophoneComponent from './_components/MicrophoneComponent';
@@ -9,12 +10,14 @@ import { visualizerConfiguration } from './_data/data';
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
 import { Microphone } from '@/assets/icons';
+import { useEncounterStore } from '../../zustand/useEncounterState'
 import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import TranscriptView from './_features/TranscriptView';
 
 export default function CurrentConsultation() {
 	//
 	const { setupMicrophone, canvas, stopMicrophone, audioData } = useMicrophoneComponent();
+	const {clearEncounter, setEncounter} = useEncounterStore();
 	const viewState = useDashboardStateChange((state) => state.consultationViews);
 	const setViewState = useDashboardStateChange().setConsultationView;
 	//
@@ -69,7 +72,11 @@ export default function CurrentConsultation() {
 				</div>
 			</div>
 			<button
-				onClick={() => setViewState('transcript-view')}
+				onClick={() => {
+					const newEncounter = createBasicEncounter();
+					setEncounter(newEncounter);
+					setViewState('transcript-view');
+				}}
 				type='button'
 				className={cn(
 					button_styles,

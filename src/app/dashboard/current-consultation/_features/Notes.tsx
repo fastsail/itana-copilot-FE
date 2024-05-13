@@ -3,6 +3,7 @@ import { GenderIntersex, Magicwand, Menu, Microphone, Refresh, Settings, Star } 
 import { button_styles } from '@/constants/global.const';
 import { cn } from '@/lib/utils';
 import { Copy } from 'lucide-react';
+import { useEncounterStore } from '@/app/zustand/useEncounterState';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -10,6 +11,8 @@ export default function Notes() {
 	//
 	const [showPause, setShowPause] = React.useState<boolean>(false);
 	const router = useRouter();
+	const { encounter, setCompletedNoteGenerations } = useEncounterStore();
+	const notes = encounter?.completedNoteGenerations || [];
 	//
 	return (
 		<div className='h-full overflow-y-auto'>
@@ -70,7 +73,7 @@ export default function Notes() {
 			| Free text area
 			|--------------------------------------------------
 			*/}
-			<div className='flex items-center gap-4 h-8'>
+			{ notes.length <= 0 &&(<div className='flex items-center gap-4 h-8'>
 				<h1 className='capitalize ml-7 text-sm font-medium'>Free text</h1>
 				<div className='flex items-center gap-3 border-l px-6'>
 					<button title='Dictate' className={cn(button_styles, 'h-max p-0')} type='button'>
@@ -80,7 +83,31 @@ export default function Notes() {
 						<Copy size={15} />
 					</button>
 				</div>
-			</div>
+			</div>)}
+
+			{/* Render clinical notes if completedNoteGenerations is not empty */}
+            {encounter && encounter.completedNoteGenerations.length > 0 && (
+				<div className='py-4'>
+				{encounter.completedNoteGenerations.map((item, index) => (
+					<div key={index} className='mb-4'>
+					{/* Clinical note title */}
+					<h2 className='text-sm ml-1 font-medium text-gray-700 mb-2'>{item.topic}</h2>
+					{/* Clinical note text input */}
+					<textarea
+						className='w-[90%] ml-1 h-[100px] outline-none resize-none text-sm placeholder:font-light placeholder:text-sm font-light focus:outline-none focus:ring focus:border-black-300 resize-none'
+						value={item.value.join('\n - ')} // Join array values with newline and bullet point
+						onChange={(e) => {
+						// Update logic to handle array of values
+						const updatedNotes = [...encounter.completedNoteGenerations];
+						const updatedValueArray = e.target.value.split('\n - ').map((v) => v.trim());
+						updatedNotes[index].value = updatedValueArray;
+						setCompletedNoteGenerations(updatedNotes);
+						}}
+					/>
+					</div>
+				))}
+				</div>
+			)}
 
 			<textarea
 				className='w-[90%] ml-1 outline-none p-6 resize-none text-sm placeholder:font-light placeholder:text-sm font-light'
