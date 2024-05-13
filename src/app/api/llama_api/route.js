@@ -5,14 +5,15 @@ export async function GET(req, res) {
     try {
         const url = new URL(req.url);
         const userMessage = url.searchParams.get('user_message');
-        const maxTokens = url.searchParams.get('max_tokens')
+        const maxTokens = url.searchParams.get('max_tokens');
+        console.log("USER_MESSAGE:",userMessage);
 
         // Check if userMessage and maxTokens are provided
         if (!userMessage || !maxTokens) {
             throw new Error('userMessage and maxTokens are required parameters');
         }
 
-        const response = await axios.get('https://llama-api-image-sbmzuuqa7a-uc.a.run.app/llama', {
+        const response = await axios.get(`${process.env.LLAMA_API_URL}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
