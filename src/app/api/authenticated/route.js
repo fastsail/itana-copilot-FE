@@ -5,6 +5,7 @@ export async function GET() {
 		const response = await fetch('https://authenticated-sbmzuuqa7a-uc.a.run.app');
 		const data = await response.json();
 
+		console.log(NextResponse.json(data));
 		return NextResponse.json(data);
 	} catch (error) {
 		console.error('Error fetching data:', error);
