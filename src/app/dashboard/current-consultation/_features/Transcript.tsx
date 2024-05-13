@@ -1,5 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useEncounterStore } from '@/app/zustand/useEncounterState';
+import { createBasicEncounter } from '@/app/(Home)/_utils/encounterUtils';
+import { processChunks } from '../_libs/processChunks';
+import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import useClickOutside from '@/hooks/useClickOutside';
 import { button_styles } from '@/constants/global.const';
 import { PauseCircleIcon, Copy, Check, Mic } from 'lucide-react';
@@ -13,35 +18,53 @@ declare global {
 
 const Transcript = () => {
     const [showPause, setShowPause] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [toggleOption, setToggleOption] = useState(false);
+    const [showTemplateNotes, setShowTemplateNotes] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [transcriptsWithTimestamps, setTranscriptsWithTimestamps] = useState<{ text: string, timestamp: string }[]>([]);
     const [isRecording, setIsRecording] = useState<boolean>(true);
+    const [template, setTemplate] = useState<string>("Consultation Transcript: Doctor: Here today.\nPatient: I have a headache. I recently changed my medication and I feel quite tired.\nDoctor: OK. So we're talking about... (interrupted)\nPatient: You need to worry about that.\nDoctor: My assistant will look into that.\nDoctor: So what I would like to do today is take a look at what's causing your headache. I'll go over the history of your physical exams and then we'll look at the insurance policy and that's all.\n"); //
+    const { encounter, setEncounter, addTranscript, setCompletedNoteGenerations } = useEncounterStore()
     const pauseRef = useClickOutside({ callback: () => setShowPause(false) });
     const ws = useRef<WebSocket | null>(null);
     let recognition: any;
+   // console.log(encounter)
+
+    const {
+        setActiveView,
+    } = useDashboardStateChange();
 
     useEffect(() => {
         startRecording(); // Start recording when component mounts
         const socket = new WebSocket('wss://https://whisper-app-sbmzuuqa7a-uc.a.run.app');
-
+    
         socket.onopen = () => {
             //console.log("WebSocket connected");
         };
-
+    
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const timestamp = getCurrentTime(); // Calculate timestamp
-            setTranscriptsWithTimestamps(prevTranscripts => [...prevTranscripts, { text: data.transcription, timestamp }]);
+            if (data.transcription.trim() !== '') {
+                setTranscriptsWithTimestamps(prevTranscripts => [...prevTranscripts, { text: data.transcription, timestamp }]);
+                if (encounter) {
+                    addTranscript(data.transcription, timestamp);
+                } else {
+                    setEncounter(createBasicEncounter()); // Initialize encounter if it's null
+                    addTranscript(data.transcription, timestamp);
+                }
+            }
         };
-
+    
         return () => {
             socket.close();
             if (recognition) {
                 recognition.stop();
             }
         };
-    }, [recognition]);
+    }, [recognition, encounter, addTranscript, setEncounter]);
+    
 
     const getCurrentTime = () => {
         const now = new Date();
@@ -112,20 +135,73 @@ const Transcript = () => {
             //console.error("Failed to copy transcript:", err);
           });
       };
-      
 
     const handleGenerateNotes = async () => {
         // Your code for generating notes
+        console.log('CLICKED GENERATE NOTES')
         setToggleOption(false)
         stopRecording();
-        //console.log("Handle Note Generation")
-    };
+        setIsLoading(true); // Set loading state to true
+		// Build the transcript string
+        let transcriptString = "";
+        for (const transcript of transcriptsWithTimestamps) {
+          transcriptString += transcript.text + "\n"; // Add line breaks between transcripts
+        }
+      
+        // Set the userMessage with the built transcript string
+        const userMessage = transcriptString;
+        //console.log("USER MESSAGE",userMessage);
+      
+        // Set maxTokens
+        const maxTokens = 240;
+      
+        try {
+        const response = await axios.get(`/api/llama_api?user_message=${userMessage}&max_tokens=${maxTokens}`);
+        //console.log('data:', response.data);
+        const processedData = processChunks(response.data);
+        console.log("PROCESSED DATA: ", processedData);
+        setCompletedNoteGenerations(processedData);
+        setActiveView('Note') // Assuming this sets the active view to 'Note'// Reset loading state after response is received
+        setIsLoading(false);
+        } catch (error) {
+        console.error('Error fetching note:', error);
+        }
+      };
 
     const handlePauseResumeConsultation = () => {
         //console.log("Pause Consultation Button Clicked");
         stopRecording();
         setIsPaused(true);
         setToggleOption(false)
+    };
+
+    const handleGenerateNotesFromTemplate = async () => {
+        if (!template.trim()) {
+            alert("Please enter a template."); // Add validation for the template
+            return;
+        }
+        stopRecording();
+        // Set maxTokens
+        const maxTokens = 240;
+
+        stopRecording();
+        setIsLoading(true);
+
+        try {
+            // Use the provided template
+            const response = await axios.get(`/api/llama_api?user_message=${template}&max_tokens=${maxTokens}`);
+            const processedData = processChunks(response.data);
+            setCompletedNoteGenerations(processedData);
+            setActiveView('Note');
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching note:', error);
+        }
+    };
+
+    // Function to toggle visibility of template notes
+    const toggleTemplateNotes = () => {
+        setShowTemplateNotes(!showTemplateNotes);
     };
 
     //console.log('Transcriptions with timestamps:', transcriptsWithTimestamps);
@@ -156,6 +232,36 @@ const Transcript = () => {
                 );
             })}
 
+            {/* Option to generate notes from a template */}
+            <div className="flex w-full items-center justify-between p-4">
+                {showTemplateNotes && (
+                    <div className="p-4 w-[70%]">
+                        {/* Render your template notes here */}
+                        <textarea
+                            value={template}
+                            onChange={(e) => setTemplate(e.target.value)}
+                            placeholder="Enter template..."
+                            className="w-full h-32 px-4 py-2 text-sm bg-white border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 resize-none"
+                        />
+                    </div>
+                )}
+                <div className='flex-row items-center justify-center'>
+                    <button
+                        onClick={toggleTemplateNotes}
+                        className="px-4 py-2 mt-3 ml-4 text-sm font-medium text-white bg-[#36A477] rounded-md hover:bg-[#36A4A7]-600 focus:outline-none focus:bg-[#36A4A7]-600"
+                    >
+                        {showTemplateNotes ? "Hide Template" : "Show Template"}
+                    </button>
+                    <button
+                        onClick={handleGenerateNotesFromTemplate}
+                        className="px-4 py-2 mt-3 ml-4 text-sm font-medium text-white bg-[#36A477] rounded-md hover:bg-[#36A4A7]-600 focus:outline-none focus:bg-[#36A4A7]-600"
+                    >
+                        Generate Notes from Template
+                    </button>
+                </div>
+                
+            </div>
+
             <div className="flex items-center gap-[1px] bottom-24 fixed right-8 ml-4">
                 {/* Dropdown Options */}
                 {toggleOption && (
@@ -175,18 +281,25 @@ const Transcript = () => {
 
                 {/* Finish and generate note button */}
                 <button
-                onClick={() => {
-                    if (!isPaused) {
-                    handleGenerateNotes();
-                    } else {
-                    startRecording();
-                    }
-                }}
-                type="button"
-                className={`${button_styles} bg-[#36A477] text-xs md:text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8`}
+                    onClick={() => {
+                        if (!isPaused && !isLoading) { // Add isLoading check
+                            handleGenerateNotes();
+                        } else {
+                            startRecording();
+                        }
+                    }}
+                    type="button"
+                    className={`${button_styles} bg-[#36A477] text-xs md:text-sm font-light text-white h-[48px] py-3 rounded-l-md flex items-center gap-2 px-8`}
+                    style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }} // Disable button click when loading
                 >
-                {!isPaused ? <Check color="white" /> : <Mic color="white" />}
-                <span>{ !isPaused ? 'Finish and generate notes' : 'Resume Consultation'}</span>
+                    {isLoading ? (
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    ) : !isPaused ? (
+                        <Check color="white" />
+                    ) : (
+                        <Mic color="white" />
+                    )}
+                    <span>{isLoading ? 'Loading...' : !isPaused ? 'Finish and generate notes' : 'Resume Consultation'}</span>
                 </button>
 
 
