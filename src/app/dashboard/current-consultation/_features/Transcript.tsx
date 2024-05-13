@@ -24,7 +24,7 @@ const Transcript = () => {
     const [isPaused, setIsPaused] = useState(false);
     const [transcriptsWithTimestamps, setTranscriptsWithTimestamps] = useState<{ text: string, timestamp: string }[]>([]);
     const [isRecording, setIsRecording] = useState<boolean>(true);
-    const [template, setTemplate] = useState<string>("Consultation Transcript: Doctor: Here today.\nPatient: I have a headache. I recently changed my medication and I feel quite tired.\nDoctor: OK. So we're talking about... (interrupted)\nPatient: You need to worry about that.\nDoctor: My assistant will look into that.\nDoctor: So what I would like to do today is take a look at what's causing your headache. I'll go over the history of your physical exams and then we'll look at the insurance policy and that's all.\n"); //
+    const [template, setTemplate] = useState<string>("Patient: Hi, I'm here today because of a headache I've been having.\n\nDoctor: Uh-huh, and how long have you been experiencing this headache?\n\nPatient: It's been about a month now.\n\nDoctor: Okay, and can you describe the headache for me? Is it constant or does it come and go?\n\nPatient: It's pretty much there all the time, a dull ache mostly, but sometimes it throbs a bit.\n\nDoctor: I see. Have you noticed anything that seems to trigger the headaches, or make them worse?\n\nPatient: Well, I did recently change my medication, so I don't know if that could be related?\n\nDoctor: Interesting. Can you tell me more about the medication you changed?\n\nPatient: Sure, it was for [mention the condition], and I switched from [old medication] to [new medication] about a month ago.\n\nDoctor: Right, and have you experienced any other side effects besides the headaches?\n\nPatient: Now that you mention it, I do feel more tired than usual.\n\nDoctor: Okay, that's good to know. Let's make a note of that. Is there any history of headaches in your family?\n\nPatient: Not that I can recall.\n\nDoctor: Alright. We can look into the medication change as a possible cause, but a good next step would be to review your past medical history. Do you have any allergies or any other ongoing medical conditions?\n\nPatient: No allergies, but I do have [mention any conditions].\n\nDoctor: Understood. Anything else you think might be relevant to your headaches?\n\nPatient: I don't think so, no.\n\nDoctor: Excellent. We'll gather this information and my assistant will look into the new medication you mentioned. In the meantime, is there anything over-the-counter you've been taking for the headaches?\n\nPatient: I've been trying some pain relievers, but they haven't really helped much."); //
     const { encounter, setEncounter, addTranscript, setCompletedNoteGenerations } = useEncounterStore()
     const pauseRef = useClickOutside({ callback: () => setShowPause(false) });
     const ws = useRef<WebSocket | null>(null);
@@ -157,7 +157,7 @@ const Transcript = () => {
       
         try {
         const response = await axios.get(`/api/llama_api?user_message=${userMessage}&max_tokens=${maxTokens}`);
-        //console.log('data:', response.data);
+        console.log('data:', response.data);
         const processedData = processChunks(response.data);
         console.log("PROCESSED DATA: ", processedData);
         setCompletedNoteGenerations(processedData);
@@ -189,6 +189,7 @@ const Transcript = () => {
 
         try {
             // Use the provided template
+            //console.log(template)
             const response = await axios.get(`/api/llama_api?user_message=${template}&max_tokens=${maxTokens}`);
             const processedData = processChunks(response.data);
             setCompletedNoteGenerations(processedData);
