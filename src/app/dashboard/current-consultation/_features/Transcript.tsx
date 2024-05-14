@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEncounterStore } from '@/app/zustand/useEncounterState';
@@ -8,6 +8,8 @@ import { useDashboardStateChange } from '@/app/zustand/useDashboardStateChange';
 import useClickOutside from '@/hooks/useClickOutside';
 import { button_styles } from '@/constants/global.const';
 import { PauseCircleIcon, Copy, Check, Mic } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Type declaration for webkitSpeechRecognition
 declare global {
@@ -29,11 +31,16 @@ const Transcript = () => {
     const pauseRef = useClickOutside({ callback: () => setShowPause(false) });
     const ws = useRef<WebSocket | null>(null);
     let recognition: any;
+
    // console.log(encounter)
 
-    const {
+     const {
         setActiveView,
     } = useDashboardStateChange();
+
+
+    const notifyShortNote = () => toast.error("We can't generate the note because your transcript is too short");
+    const notifyLoading = () => toast.success("Your transcripts are currently being analyzed and notes are being generated and will be available soon.");
 
     useEffect(() => {
         startRecording(); // Start recording when component mounts
@@ -65,13 +72,6 @@ const Transcript = () => {
         };
     }, [recognition, encounter, addTranscript, setEncounter]);
     
-
-    const getCurrentTime = () => {
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        return `${hours}:${minutes}`;
-    };
 
     const startRecording = () => {
         //console.log("Start Recording Initialized")
@@ -106,6 +106,12 @@ const Transcript = () => {
 
         recognition.start();
     };
+    const getCurrentTime = () => {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
 
     const stopRecording = () => {
         recognition = new window.webkitSpeechRecognition();
@@ -137,36 +143,66 @@ const Transcript = () => {
       };
 
     const handleGenerateNotes = async () => {
-        // Your code for generating notes
-        console.log('CLICKED GENERATE NOTES')
-        setToggleOption(false)
-        stopRecording();
-        setIsLoading(true); // Set loading state to true
-		// Build the transcript string
-        let transcriptString = "";
-        for (const transcript of transcriptsWithTimestamps) {
-          transcriptString += transcript.text + "\n"; // Add line breaks between transcripts
+    // Build the transcript string
+    stopRecording()
+    let transcriptString = "";
+    for (const transcript of transcriptsWithTimestamps) {
+        transcriptString += transcript.text + "\n"; // Add line breaks between transcripts
+    }
+
+    // Check if transcript length is less than 90 characters
+    if (transcriptString.length < 90) {
+        notifyShortNote();
+        setIsLoading(false);
+        return;
+    }
+
+    setIsLoading(true); // Set loading state to true
+
+    // Set the userMessage with the built transcript string
+    const userMessage = transcriptString;
+
+    // Set maxTokens
+    const maxTokens = 240;
+
+    // Logic for server-side rendering (optional)
+    if (process.env.NODE_ENV === 'production') {
+        try {
+        // Fetch data from your API route on the server
+        const response = await fetch(`/api/llama_api?user_message=${userMessage}&max_tokens=${maxTokens}`);
+        const processedData = await response.json();
+
+        // Update component state with processed data (assuming this happens on the client-side)
+        return {
+            props: {
+            processedData,
+            },
+        };
+        } catch (error) {
+        console.error('Error fetching note:', error);
+        // Handle error on server-side (e.g., return an error message)
+        return {
+            props: {
+            error: 'Failed to generate notes',
+            },
+        };
         }
-      
-        // Set the userMessage with the built transcript string
-        const userMessage = transcriptString;
-        //console.log("USER MESSAGE",userMessage);
-      
-        // Set maxTokens
-        const maxTokens = 240;
-      
+    } else {
+        // Fallback for development environment (fetch data on the client)
+        notifyLoading();
         try {
         const response = await axios.get(`/api/llama_api?user_message=${userMessage}&max_tokens=${maxTokens}`);
         console.log('data:', response.data);
         const processedData = processChunks(response.data);
         console.log("PROCESSED DATA: ", processedData);
         setCompletedNoteGenerations(processedData);
-        setActiveView('Note') // Assuming this sets the active view to 'Note'// Reset loading state after response is received
+        setActiveView('Note'); // Assuming this sets the active view to 'Note'
         setIsLoading(false);
         } catch (error) {
         console.error('Error fetching note:', error);
         }
-      };
+    }
+    };
 
     const handlePauseResumeConsultation = () => {
         //console.log("Pause Consultation Button Clicked");
@@ -180,17 +216,26 @@ const Transcript = () => {
             alert("Please enter a template."); // Add validation for the template
             return;
         }
-        stopRecording();
-        // Set maxTokens
-        const maxTokens = 240;
+    
+        // Check if template length is less than 90 characters
+        if (template.length < 90) {
+            notifyShortNote();
+            return;
+        }
 
+        const formattedTemplate = template.replace(/\n/g, "<br />");
+    
         stopRecording();
         setIsLoading(true);
+        // Set maxTokens
+        const user_message = formattedTemplate;
+        const maxTokens = 240;
 
+        notifyLoading();
         try {
             // Use the provided template
             //console.log(template)
-            const response = await axios.get(`/api/llama_api?user_message=${template}&max_tokens=${maxTokens}`);
+            const response = await axios.get(`/api/llama_api?user_message=${user_message}&max_tokens=${maxTokens}`);
             const processedData = processChunks(response.data);
             setCompletedNoteGenerations(processedData);
             setActiveView('Note');
@@ -212,6 +257,18 @@ const Transcript = () => {
 
     return (
         <div className="h-full overflow-y-auto">
+            <ToastContainer
+            position="top-right"
+            autoClose={false}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
             {/* Your transcript rendering code */}
             {transcriptsWithTimestamps.map((transcript, index) => {
                 if (!transcript.text.trim()) return null; // Skip empty transcriptions
