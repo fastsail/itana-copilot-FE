@@ -21,7 +21,7 @@ import { useAuth } from '@/app/auth/useAuth';
 
 export function Navbar() {
 	const pathname = usePathname(); // Get current pathname
-	const isDashboardRoute = pathname.startsWith('/dashboard/');
+	const isDashboardRoute = pathname?.startsWith('/dashboard/');
 	const {loading} = useAuth();
 
 	if(loading) return<nav className='max-w-[1440px] hidden md:flex bg-white justify-between items-center px-[4%] h-[80px] mx-auto w-full'>
