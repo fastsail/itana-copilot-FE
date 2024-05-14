@@ -1,12 +1,14 @@
+export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET(req, res) {
+export async function GET(req, res) {;
+    const searchParams = req.nextUrl.searchParams;
     try {
-        const url = new URL(req.url);
+        const url = new URL(req.nextUrl);
         const userMessage = url.searchParams.get('user_message');
-        const maxTokens = url.searchParams.get('max_tokens');
-        console.log("USER_MESSAGE:",userMessage);
+        const maxTokens = url.searchParams.get('max_tokens')
+        //console.log("USER_MESSAGE:",userMessage);
 
         // Check if userMessage and maxTokens are provided
         if (!userMessage || !maxTokens) {

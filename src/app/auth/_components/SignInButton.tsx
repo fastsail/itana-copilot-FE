@@ -45,5 +45,10 @@ export function SignInButton({title ="Sign In"}: SignInProps) {
 			</Link>
 		);
 	}
+
+    else if (loading) {
+        // Return a loading indicator while loading
+        return <span className='text-gray-400'>...</span>;
+    }
 }
 
