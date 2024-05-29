@@ -15,7 +15,7 @@ export async function GET(req, res) {;
             throw new Error('userMessage and maxTokens are required parameters');
         }
 
-        const response = await axios.get(`${process.env.LLAMA_API_URL}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_LLAMA_API_URL}`, {
             headers: {
                 'Content-Type': 'application/json',
             },

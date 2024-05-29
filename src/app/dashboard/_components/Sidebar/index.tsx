@@ -55,9 +55,9 @@ const sidebar_data_aux = [
 export default function Sidebar() {
 	// current local time
 	const time = getCurrentLocalTime();
-	//
+//
 	const pathname = usePathname();
-	const [isActivePage, setIsActivePage] = React.useState<string>(pathname);
+	const [isActivePage, setIsActivePage] = React.useState<string | null>(pathname);
 	const { consultationViews, setShowSidebar, showSidebar } = useDashboardStateChange();
 	//
 	React.useEffect(() => {

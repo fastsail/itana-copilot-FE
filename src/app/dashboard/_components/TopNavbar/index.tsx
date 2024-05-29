@@ -87,7 +87,7 @@ export default function TopNavigation() {
 			| Consultation View
 			|--------------------------------------------------
 			*/}
-			{!pathname.includes('/current-consultation') ? null : viewState === 'default' ? null : (
+			{!pathname?.includes('/current-consultation') ? null : viewState === 'default' ? null : (
 				<div className='w-full flex gap-8'>
 					{tabViews.map((tab) => (
 						<button
@@ -108,7 +108,7 @@ export default function TopNavigation() {
 			| Settings tabview
 			|--------------------------------------------------
 			*/}
-			{!pathname.includes('/settings') ? null : (
+			{!pathname?.includes('/settings') ? null : (
 				<div className='w-full flex gap-4 md:gap-8'>
 					{settingsTabView.map((tab) => (
 						<button
