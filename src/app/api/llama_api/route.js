@@ -1,14 +1,13 @@
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET(req, res) {;
+export async function GET(req, res) {
     const searchParams = req.nextUrl.searchParams;
     try {
         const url = new URL(req.nextUrl);
         const userMessage = url.searchParams.get('user_message');
-        const maxTokens = url.searchParams.get('max_tokens')
-        //console.log("USER_MESSAGE:",userMessage);
+        const maxTokens = url.searchParams.get('max_tokens');
 
         // Check if userMessage and maxTokens are provided
         if (!userMessage || !maxTokens) {
@@ -28,6 +27,7 @@ export async function GET(req, res) {;
         return NextResponse.json(response.data); // Send response data
     } catch (error) {
         console.error('Error fetching note:', error);
-        return NextResponse.json({ message: 'Invalid user_message' }, { status: 400 });
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        return NextResponse.json({ message: errorMessage }, { status: 400 });
     }
 }
