@@ -22,6 +22,7 @@ export async function GET(req, res) {
                 user_message: userMessage,
                 max_tokens: maxTokens,
             },
+            timeout: 300000,
         });
 
         return NextResponse.json(response.data); // Send response data
