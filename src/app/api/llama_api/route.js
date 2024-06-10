@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import axios from 'axios';
+export const maxDuration = 300;
 
 export async function GET(req, res) {
     const searchParams = req.nextUrl.searchParams;
@@ -21,8 +22,7 @@ export async function GET(req, res) {
             params: {
                 user_message: userMessage,
                 max_tokens: maxTokens,
-            },
-            timeout: 300000,
+            }
         });
 
         return NextResponse.json(response.data); // Send response data
